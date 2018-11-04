@@ -7,13 +7,14 @@ This is a temporary script file.
 
 import pygame as pg
 
+
 pg.init()
 
 
 ###Screen Resolution
 screen_width=800
-screen_height=600
-GameResolution={screen_width,screen_height}
+screen_height=400
+GameResolution=[screen_width,screen_height]
 
 ###Flag Options
 #0             no flags
@@ -30,22 +31,101 @@ ScreenFlags=0
 # not passing the argument default to the best and fastest color depth for the system
 #NumberofBitstoUseforColor=0
 
-gameDisplay=pg.display.det_mode(resolution=GameResolution,flags=ScreenFlags)
+gameDisplay=pg.display.set_mode(GameResolution,ScreenFlags)
 
 ### Title of the game Window
-pg.display.set_captions("Hello World")
+pg.display.set_caption('Hello World!')
+
 
 ###Game Clock
-clock=pg.time.clock()
+clock=pg.time.Clock()
 
-crashed=Flase
+###Colors RGB code 0-255
+
+red = (255,0,0)
+green = (0,255,0)
+blue = (0,0,255)
+darkBlue = (0,0,128)
+white = (255,255,255)
+black = (0,0,0)
+pink = (255,200,200)
+
+
+colors={0:red,
+        1:white
+        }
+
+tilemap=[[red,green,red,green,red,green,red,green],
+         [white,blue,white,blue,white,blue,white,blue],
+         [red,green,red,green,red,green,red,green],
+         [white,blue,white,blue,white,blue,white,blue],
+         [red,green,red,green,red,green,red,green],
+         [white,blue,white,blue,white,blue,white,blue]
+        ]
+
+tilemap2=[[red,green,red,green,red,green,red,green],
+         [white,blue,white,blue,white,blue,white,blue],
+         [red,green,red,green,red,green,red,green],
+         [white,blue,white,blue,white,blue,white,blue],
+         [red,green,red,green,red,green,red,green],
+         [white,blue,white,blue,white,blue,white,blue],
+         [white,blue,white,blue,white,blue,white,blue],
+         [red,green,red,green,red,green,red,green],
+         [white,blue,white,blue,white,blue,white,blue]
+        ]
+tilesize=100
+mapwidth=int(screen_width/tilesize)
+print(mapwidth)
+mapheight=int(screen_height/tilesize)
+print(mapheight)
+GameResolutionWithTiles=[mapwidth*tilesize,mapheight*tilesize]
+gameDisplay=pg.display.set_mode(GameResolutionWithTiles,ScreenFlags)
+
+#pg.display.update()
+
+crashed= False
 while not crashed:
     #list of events per frame per second
+    
+    #Quiting the game
     for event in pg.event.get():
-        #QUIT--> X botton
+        #X buttom mouse clicking --> Quit
         if event.type == pg.QUIT:
             crashed = True
-        print(event)
+        # presing key event
+        if event.type == pg.KEYDOWN:
+            # ESCAPE --> Quit
+            if event.key == pg.K_ESCAPE:
+                crashed = True
+            # CTRL+Q -->Quit
+            if pg.key.get_mods() and pg.KMOD_CTRL and event.key == pg.K_q:
+                crashed = True
+    
+    for row in range(mapwidth):
+        for column in range(mapheight):
+            position=(row*tilesize,column*tilesize, tilesize,tilesize)
+            pg.draw.rect(gameDisplay,tilemap2[row][column],position)
+    ## shapes on thw screen 
+    ## Rectangural
+    positon=(100,50,20,20)
+    width=50
+    pg.draw.rect(gameDisplay,black,positon,width)
+    
+    positon=(50,300,200,20)
+    width=0
+    pg.draw.rect(gameDisplay,black,positon,width)
+    
+    positon=(500,60,100,100)
+    width=0
+    pg.draw.rect(gameDisplay,black,positon,width)
+    #Cicle
+    center=(500,500)
+    width=0
+    radius=100
+    pg.draw.circle(gameDisplay,black,center,radius,width)
+    
+    
+    
     pg.display.update()
     #frame per second
     FramesPerSecond=60
