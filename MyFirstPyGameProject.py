@@ -6,12 +6,29 @@ This is a temporary script file.
 """
 
 import pygame as pg
+import os
 
 
 pg.init()
 
 
-###Screen Resolution
+
+###Colors RGB code 0-255
+
+red = (255,0,0)
+green = (0,255,0)
+blue = (0,0,255)
+darkBlue = (0,0,128)
+white = (255,255,255)
+black = (0,0,0)
+pink = (255,200,200)
+
+
+colors={0:red,
+        1:white
+        }
+
+###Screen Resolution/Game Surface
 screen_width=1000
 screen_height=550
 GameResolution=[screen_width,screen_height]
@@ -40,28 +57,14 @@ pg.display.set_caption('Hello World!')
 ###Game Clock
 clock=pg.time.Clock()
 
-###Colors RGB code 0-255
-
-red = (255,0,0)
-green = (0,255,0)
-blue = (0,0,255)
-darkBlue = (0,0,128)
-white = (255,255,255)
-black = (0,0,0)
-pink = (255,200,200)
-
-
-colors={0:red,
-        1:white
-        }
 
 ## MOSAIC
 
 tilesize=10
 mapwidth=int(screen_width/tilesize)
-print(mapwidth)
+#print(mapwidth)
 mapheight=int(screen_height/tilesize)
-print(mapheight)
+#print(mapheight)
 GameResolutionWithTiles=[mapwidth*tilesize,mapheight*tilesize]
 gameDisplay=pg.display.set_mode(GameResolutionWithTiles,ScreenFlags)
 
@@ -82,19 +85,114 @@ for row in range(mapwidth):
         elif column in border_tiles_H:
             tilemap[row][column]=red
         else:
-            tilemap[row][column]=green
+            tilemap[row][column]=pink
         
 
 ## Palyer's Avatar
-#load image
-DDbaby=pg.image.load("shrek1.png").convert_alpha()
-#resizing palyer's image
-DDbaby=pg.transform.scale(DDbaby,(50,50))
+            
+#Avatar parameters and starting position
+Avatar_x=250
+Avatar_y=250
 #initial potision
-DDposition=[2,2]        
-        
+Avatar_position=[Avatar_x,Avatar_y]   
+#Avatar size
+Avatar_width=64
+Avatar_height=64
+#Avatar speed
+Avatar_speed=2
+
+Jumping= False
+Jump_step_max=10
+Jump_step=Jump_step_max
+
+### Avatar Image
+image_path="Giannis"
+
+##Walking
+
+Right_images=["sprite_Giannis00","sprite_Giannis01","sprite_Giannis02",
+              "sprite_Giannis03","sprite_Giannis04","sprite_Giannis05",
+              "sprite_Giannis06","sprite_Giannis07","sprite_Giannis08",
+              "sprite_Giannis09","sprite_Giannis10","sprite_Giannis11",
+              "sprite_Giannis12","sprite_Giannis13","sprite_Giannis14",
+              "sprite_Giannis15","sprite_Giannis16","sprite_Giannis17",
+              "sprite_Giannis18","sprite_Giannis19","sprite_Giannis20",
+              "sprite_Giannis21","sprite_Giannis22","sprite_Giannis23",
+              "sprite_Giannis24","sprite_Giannis25","sprite_Giannis26",
+              "sprite_Giannis27","sprite_Giannis28","sprite_Giannis29",
+              "sprite_Giannis30"]
+
+Walking_images_path=os.path.join(image_path,"GiannisWalking")
+Right_images_path=[os.path.join(Walking_images_path,i+".png") for i in Right_images]
+
+Walking_Right=[pg.image.load(i) for i in Right_images_path]
+Walking_Left=[pg.transform.flip(i,True,False) for i in Walking_Right]
+
+
+Left=False
+Right=False
+Frond=False
+Back=False
+WalkCount=0
+
+##Waving
+## One Hand
+Waving_images=["sprite_GiannisWaving0","sprite_GiannisWaving1",
+               "sprite_GiannisWaving2","sprite_GiannisWaving3",
+               "sprite_GiannisWaving4",
+               "sprite_GiannisWaving5","sprite_GiannisWaving6"]
+
+Waving_images_folder_path=os.path.join(image_path,"GiannisWaving")
+Waving_images_path=[os.path.join(Waving_images_folder_path,i+".png") for i in Waving_images]
+Waving=[pg.image.load(i) for i in Waving_images_path]
+## Two Hand
+Waving_2Hands_images=["sprite_GiannisWavingBothHAnds0",
+                       "sprite_GiannisWavingBothHAnds1",
+                       "sprite_GiannisWavingBothHAnds2",
+                       "sprite_GiannisWavingBothHAnds3",
+                       "sprite_GiannisWavingBothHAnds4",
+                       "sprite_GiannisWavingBothHAnds5",
+                       "sprite_GiannisWavingBothHAnds6",
+                       "sprite_GiannisWavingBothHAnds7",
+                       "sprite_GiannisWavingBothHAnds8"]
+
+Waving_2Hands_images_folder_path=os.path.join(image_path,"GiannisWavingBOthHAnds")
+Waving_2Hands_images_path=[os.path.join(Waving_2Hands_images_folder_path,i+".png") for i in Waving_2Hands_images]
+Waving_2Hands=[pg.image.load(i) for i in Waving_2Hands_images_path]
+
+## Avatar Frond
+Frond_images=["GiannisStanding"]
+Frond_images_folder_path=os.path.join(image_path,"GiannisFrond")
+Frond_images_path=[os.path.join(Frond_images_folder_path,i+".png") for i in Frond_images]
+Face=[pg.image.load(i) for i in Frond_images_path]
+
+## Avatar Back
+Back_images=["GiannisBack"]
+Back_images_folder_path=os.path.join(image_path,"GiannisBack")
+Back_images_path=[os.path.join(Back_images_folder_path,i+".png") for i in Back_images]
+BackHead=[pg.image.load(i) for i in Back_images_path]
+
+
+def redrawGameWindow():
+    global WalkCount  
+    if WalkCount+1>31:
+        WalkCount=0
+    if Right:
+        gameDisplay.blit(Walking_Right[WalkCount],(Avatar_position[0],Avatar_position[1]))
+        WalkCount+=1
+    elif Left:
+        gameDisplay.blit(Walking_Left[WalkCount],(Avatar_position[0],Avatar_position[1]))
+        WalkCount+=1
+    elif Back:
+        gameDisplay.blit(BackHead[0],(Avatar_position[0],Avatar_position[1]))    
+    else:
+        gameDisplay.blit(Face[0],(Avatar_position[0],Avatar_position[1]))
+    pg.display.update()
+
+
 crashed= False
 while not crashed:
+    
     #list of events per frame per second
     
     ### MAP
@@ -121,12 +219,13 @@ while not crashed:
     radius=100
     pg.draw.circle(gameDisplay,black,center,radius,width)
     
-    ## Palyer's Avatar
-    #dispaly on game's surface
-    gameDisplay.blit(DDbaby,(DDposition[0]*tilesize,DDposition[1]*tilesize)) 
+
     
     #Quiting the game
     for event in pg.event.get():
+        
+        #### QUITING GAME
+        
         #X buttom mouse clicking --> Quit
         if event.type == pg.QUIT:
             crashed = True
@@ -139,28 +238,74 @@ while not crashed:
             if pg.key.get_mods() and pg.KMOD_CTRL and event.key == pg.K_q:
                 crashed = True
                 
-            # moving to the right until the end of map
-            if event.key == pg.K_RIGHT and DDposition[0]<mapwidth-tilesize/2-2:
-                DDposition[0]+=1
-            # moving to the left until the end of map
-            if event.key == pg.K_LEFT and DDposition[0]>2:
-                DDposition[0]-=1
-            # moving to the up until the end of map
-            if event.key == pg.K_UP and DDposition[1]>2:
-                DDposition[1]-=1
-            # moving to the down until the end of map
-            if event.key == pg.K_DOWN and DDposition[1]<mapheight-tilesize/2-2:
-                DDposition[1]+=1
+    ### Moving the avatar
+    ## Moving Keys
+    moving_keys=pg.key.get_pressed()
+    # moving left and right
+    if moving_keys[pg.K_RIGHT] and Avatar_position[0]<screen_width-Avatar_speed-50:
+        Avatar_position[0]+=Avatar_speed
+        Left=False
+        Right=True
+        Frond=False
+        Back=False
+    elif moving_keys[pg.K_LEFT] and Avatar_position[0]>Avatar_speed:
+        Avatar_position[0]-=Avatar_speed
+        Left=True
+        Right=False
+        Frond=False
+        Back=False
+    else:
+        Left=False
+        Right=False
+        Frond=True
+        Back=False
+        
+        
+        
+    #moving up and down and jumping
+    if not Jumping:
+        if moving_keys[pg.K_UP] and Avatar_position[1]>0:
+            Avatar_position[1]-=Avatar_speed
+            Left=False
+            Right=False
+            Frond=False
+            Back=True
+        if moving_keys[pg.K_DOWN] and Avatar_position[1]<(screen_height-Avatar_height-Avatar_speed):
+            Avatar_position[1]+=Avatar_speed
+            Left=False
+            Right=False
+            Frond=True
+            Back=False
+        if moving_keys[pg.K_SPACE] and Avatar_position[1]>2*Jump_step_max**2:
+            Jumping = True
+            Left=False
+            Right=False
+            Frond=True
+            Back=False
+    if Jumping:
+        counter=1
+        if Jump_step>=-Jump_step_max :
+            direction=1
+            if Jump_step<0:
+                direction=-1
+            Avatar_position[1]-=(Jump_step**2)*0.5*direction
+            Jump_step-=1
+            counter+=1
+        else:
+            Jumping=False
+            Jump_step=Jump_step_max
 
-                
-    gameDisplay.blit(DDbaby,(DDposition[0]*tilesize,DDposition[1]*tilesize))
+
+            
+
     
-    pg.display.update()
+    #dispaly on game's surface           
+    
     #frame per second
     FramesPerSecond=100
     clock.tick(FramesPerSecond)
     
-
+    redrawGameWindow()
     
 pg.quit()
 quit()
