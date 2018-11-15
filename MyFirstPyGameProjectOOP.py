@@ -118,7 +118,7 @@ class SceneBase:
     def __init__(self):
         self.next = self
     
-    def ProcessInput(self, events, pressed_keys):
+    def ProcessInput(self, events):
         print("uh-oh, you didn't override this in the child class")
 
     def Update(self):
@@ -133,6 +133,45 @@ class SceneBase:
     def Terminate(self):
         self.SwitchToScene(None)
 
+class TitleScene(SceneBase):
+    def __init__(self):
+        SceneBase.__init__(self)
+    
+    def quitScene(self, event):
+        if event[pg.K_RETURN]:
+                # Move to the next scene when the user pressed Enter
+            self.SwitchToScene(GameScene())
+    
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        # For the sake of brevity, the title scene is a blank red screen
+        text = font.render("Hello", True,black)
+        screen.fill(white)
+        screen.blit(text,(320 , 240))
+        
+class GameScene(SceneBase):
+    def __init__(self):
+        SceneBase.__init__(self)
+    
+    def ProcessInput(self, events):
+        pass
+        
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        # The game scene is just a blank blue screen 
+                    #Background
+        drawBackground()
+            ### Moving the avatar
+            
+        player.movement()
+
+        redrawGameWindow(player)
+    def quitScene(self, event):
+        pass
 
 ###############################################################################
 #######################            AVATARS           ##########################
@@ -664,17 +703,18 @@ def quitGame(crashed=False):
 ###############################################################################
 #########################         Quit Scene         ##########################
 ###############################################################################
-        
-def quitScene():
-        #Quiting Scene
-    for event in pg.event.get(): 
-        if event.type == pg.KEYDOWN:
-            # ESCAPE --> Back to previous scene
-            if event.key ==pg.K_RETURN:
-                return True
-    return False
-
-                      
+#        
+#def quitScene():
+#        #Quiting Scene
+#    for event in pg.event.get(): 
+#        if event.type == pg.KEYDOWN:
+#            # ESCAPE --> Back to previous scene
+#            if event.key ==pg.K_RETURN:
+#                return True
+#            
+#    
+#
+#                      
 
 ###############################################################################
 ##########################          Background          #######################
@@ -753,35 +793,43 @@ player = Avatar(500,200,32,32)
 #######################                                 #######################
 ###############################################################################
 
-def run_game():
+def run_game(starting_scene):
     pg.init()
     main()
+    active_scene = starting_scene
     while not quitGame():
         quitGame()
         
-        if Action_Inside_Building(player):
-            pg.display.flip()
-            text = font.render("Hello", True,black)
-            gameDisplay.fill(white)
-            gameDisplay.blit(text,(320 , 240))
-    
-        else:
-            #Background
-            drawBackground()
-            ### Moving the avatar
-            
-            player.movement()
-            
-            FramesPerSecond=100
-           
-            #frame per second
-            
-            clock.tick(FramesPerSecond)
-            redrawGameWindow(player)
-            
-            
+#        if Action_Inside_Building(player):
+#            pg.display.flip()
+#            text = font.render("Hello", True,black)
+#            gameDisplay.fill(white)
+#            gameDisplay.blit(text,(320 , 240))
+#    
+#        else:
+#            #Background
+#            drawBackground()
+#            ### Moving the avatar
+#            
+#            player.movement()
+#            
+#            FramesPerSecond=100
+#           
+#            #frame per second
+#            
+#            clock.tick(FramesPerSecond)
+#            redrawGameWindow(player)
+        key=pg.key.get_pressed()
+        
+        active_scene.Update()
+        active_scene.Render(gameDisplay)
+        active_scene.quitScene(key)
+        
+        active_scene = active_scene.next
+        
+        pg.display.flip()   
      
         
     pg.quit()
-run_game()
+run_game(TitleScene())
 quit()
