@@ -9,12 +9,14 @@ import pygame as pg
 import os
 
 
-pg.init()
+global red, green, blue, darkBlue, white, black, pink
+###Screen Resolution/Game Surface
+global screen_width, screen_height
 
-
-font = pg.font.SysFont("comicsansms", 24)
+screen_width=1000 
+screen_height=550
 ###Colors RGB code 0-255
-
+    
 red = (255,0,0)
 green = (0,255,0)
 blue = (0,0,255)
@@ -23,80 +25,18 @@ white = (255,255,255)
 black = (0,0,0)
 pink = (255,200,200)
 
+doors=[]
+screenborders={}
 
-colors={0:red,
-        1:white
-        }
-
-###Screen Resolution/Game Surface
-screen_width=1000
-screen_height=550
-GameResolution=[screen_width,screen_height]
-
-###Flag Options
-#0             no flags
-#FULLSCREEN    create a fullscreen display (default)
-#DOUBLEBUF     recommended for HWSURFACE or OPENGL
-#HWSURFACE     hardware accelerated, only in FULLSCREEN
-#OPENGL        create an OpenGL-renderable display
-#RESIZABLE     display window should be sizeable
-#NOFRAME       display window will have no border or controls
-
-ScreenFlags=0
-
-### Color Depth
-# not passing the argument default to the best and fastest color depth for the system
-#NumberofBitstoUseforColor=0
-
-#gameDisplay=pg.display.set_mode(GameResolution,ScreenFlags)
-
-### Title of the game Window
-pg.display.set_caption('Hello World!')
-
-
-###Game Clock
-clock=pg.time.Clock()
-
+walls=[]
+BuildingsSurface=[]
+PaintingBuildingWalls=[]
 
 ###############################################################################
-###############           Background Images         ###########################
+#################           Buildings Images         ##########################
 ###############################################################################
-tilesize=10
-mapwidth=int(screen_width/tilesize)
-#print(mapwidth)
-mapheight=int(screen_height/tilesize)
-#print(mapheight)pg.time.Clock
-GameResolutionWithTiles=[mapwidth*tilesize,mapheight*tilesize]
-gameDisplay=pg.display.set_mode(GameResolutionWithTiles,ScreenFlags)
-
-
-#border_tiles_H=[0,1,5,6,mapheight-7,mapheight-6,mapheight-2,mapheight-1]
-#border_tiles_V=[0,1,5,6,mapwidth-7,mapwidth-6,mapwidth-2,mapwidth-1]
-
-border_tiles_H=[0,1,mapheight-2,mapheight-1]
-border_tiles_V=[0,1,mapwidth-2,mapwidth-1]
-
-earth=0
-grass=1
-
-ground={
-        earth : pg.image.load("Ground Sprite Pack\ground3.png"),
-        #grass : pg.image.load("Ground Sprite Pack\\LGrass2.png")
-        }
 
 gallery = pg.image.load("Ground Sprite Pack\gallery.png")
-
-tilemap=[[earth for y in range(mapheight)] for x in range(mapwidth)]
-
-#
-#for row in range(mapwidth):
-#    for column in range(mapheight):
-#        if row in border_tiles_V:
-#            tilemap[row][column]=red
-#        elif column in border_tiles_H:
-#            tilemap[row][column]=red
-#        else:
-#            tilemap[row][column]=pink
 
 ###############################################################################
 ###################           Avatar Images         ###########################
@@ -169,6 +109,30 @@ BackHead=[pg.image.load(i) for i in Back_images_path]
 ######################             CLASSES           ##########################
 ######################                               ##########################
 ###############################################################################
+
+###############################################################################
+#######################            SCENES            ##########################
+###############################################################################
+
+class SceneBase:
+    def __init__(self):
+        self.next = self
+    
+    def ProcessInput(self, events, pressed_keys):
+        print("uh-oh, you didn't override this in the child class")
+
+    def Update(self):
+        print("uh-oh, you didn't override this in the child class")
+
+    def Render(self, screen):
+        print("uh-oh, you didn't override this in the child class")
+
+    def SwitchToScene(self, next_scene):
+        self.next = next_scene
+    
+    def Terminate(self):
+        self.SwitchToScene(None)
+
 
 ###############################################################################
 #######################            AVATARS           ##########################
@@ -586,7 +550,88 @@ class timeUnit():
 ######################3###        FUNCTIONS         ###########################
 ###############################################################################
 ###############################################################################
-                
+ 
+    
+###############################################################################
+###########           Initialise Game Funciton         ########################
+###############################################################################    
+
+def main():
+    global screen_width, mapwidth, mapheight, tilesize, tilemap
+    global clock, font, gameDisplay
+    global ground
+    
+    font = pg.font.SysFont("comicsansms", 24)
+
+    ###Screen Resolution/Game Surface
+    GameResolution=[screen_width,screen_height]
+    
+    ###Flag Options
+    #0             no flags
+    #FULLSCREEN    create a fullscreen display (default)
+    #DOUBLEBUF     recommended for HWSURFACE or OPENGL
+    #HWSURFACE     hardware accelerated, only in FULLSCREEN
+    #OPENGL        create an OpenGL-renderable display
+    #RESIZABLE     display window should be sizeable
+    #NOFRAME       display window will have no border or controls
+    
+    ScreenFlags=0
+    
+    ### Color Depth
+    # not passing the argument default to the best and fastest color depth for the system
+    #NumberofBitstoUseforColor=0
+    
+    #gameDisplay=pg.display.set_mode(GameResolution,ScreenFlags)
+    
+    ### Title of the game Window
+    pg.display.set_caption('Hello World!')
+    
+    
+    ###Game Clock
+    clock=pg.time.Clock()
+    
+    
+    ###########################################################################
+    #############           Background Images         #########################
+    ###########################################################################
+    tilesize=10
+    mapwidth=int(screen_width/tilesize)
+    #print(mapwidth)
+    mapheight=int(screen_height/tilesize)
+    #print(mapheight)pg.time.Clock
+    GameResolutionWithTiles=[mapwidth*tilesize,mapheight*tilesize]
+    gameDisplay=pg.display.set_mode(GameResolutionWithTiles,ScreenFlags)
+    
+    
+    #border_tiles_H=[0,1,5,6,mapheight-7,mapheight-6,mapheight-2,mapheight-1]
+    #border_tiles_V=[0,1,5,6,mapwidth-7,mapwidth-6,mapwidth-2,mapwidth-1]
+    
+    border_tiles_H=[0,1,mapheight-2,mapheight-1]
+    border_tiles_V=[0,1,mapwidth-2,mapwidth-1]
+    
+    earth=0
+    grass=1
+    
+    ground={
+            earth : pg.image.load("Ground Sprite Pack\ground3.png"),
+            #grass : pg.image.load("Ground Sprite Pack\\LGrass2.png")
+            }
+    
+
+    
+    tilemap=[[earth for y in range(mapheight)] for x in range(mapwidth)]
+    
+    #
+    #for row in range(mapwidth):
+    #    for column in range(mapheight):
+    #        if row in border_tiles_V:
+    #            tilemap[row][column]=red
+    #        elif column in border_tiles_H:
+    #            tilemap[row][column]=red
+    #        else:
+    #            tilemap[row][column]=pink
+
+               
 ###############################################################################
 ##################         Draw Avatar on Surface       #######################
 ###############################################################################
@@ -634,8 +679,7 @@ def quitScene():
 ###############################################################################
 ##########################          Background          #######################
 ###############################################################################
-doors=[]
-screenborders={}
+
 def drawBackground():
         ### MAP
     for row in range(mapwidth):
@@ -681,15 +725,8 @@ def Action_Inside_Building(player):
          
               
 
-###############################################################################
-##########################          Draw Walls          #######################
-###############################################################################
-walls=[]
-BuildingsSurface=[]
-PaintingBuildingWalls=[]
 
 
-    #return walls
 ###############################################################################
 ##################             Text Message             #######################
 ###############################################################################   
@@ -716,32 +753,35 @@ player = Avatar(500,200,32,32)
 #######################                                 #######################
 ###############################################################################
 
-
-while not quitGame():
-    quitGame()
+def run_game():
+    pg.init()
+    main()
+    while not quitGame():
+        quitGame()
+        
+        if Action_Inside_Building(player):
+            pg.display.flip()
+            text = font.render("Hello", True,black)
+            gameDisplay.fill(white)
+            gameDisplay.blit(text,(320 , 240))
     
-    if Action_Inside_Building(player):
-        pg.display.flip()
-        text = font.render("Hello", True,black)
-        gameDisplay.fill(white)
-        gameDisplay.blit(text,(320 , 240))
-
-    else:
-        #Background
-        drawBackground()
-        ### Moving the avatar
+        else:
+            #Background
+            drawBackground()
+            ### Moving the avatar
+            
+            player.movement()
+            
+            FramesPerSecond=100
+           
+            #frame per second
+            
+            clock.tick(FramesPerSecond)
+            redrawGameWindow(player)
+            
+            
+     
         
-        player.movement()
-        
-        FramesPerSecond=100
-       
-        #frame per second
-        
-        clock.tick(FramesPerSecond)
-        redrawGameWindow(player)
-        
-        
- 
-    
-pg.quit()
+    pg.quit()
+run_game()
 quit()
