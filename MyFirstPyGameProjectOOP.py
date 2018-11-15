@@ -12,7 +12,7 @@ import os
 pg.init()
 
 
-
+font = pg.font.SysFont("comicsansms", 24)
 ###Colors RGB code 0-255
 
 red = (255,0,0)
@@ -76,19 +76,27 @@ gameDisplay=pg.display.set_mode(GameResolutionWithTiles,ScreenFlags)
 border_tiles_H=[0,1,mapheight-2,mapheight-1]
 border_tiles_V=[0,1,mapwidth-2,mapwidth-1]
 
+earth=0
+grass=1
 
-tilemap=[[red for y in range(mapheight)] for x in range(mapwidth)]
+ground={
+        earth : pg.image.load("Ground Sprite Pack\ground3.png"),
+        #grass : pg.image.load("Ground Sprite Pack\\LGrass2.png")
+        }
 
-for row in range(mapwidth):
-    for column in range(mapheight):
-        if row in border_tiles_V:
-            tilemap[row][column]=red
-        elif column in border_tiles_H:
-            tilemap[row][column]=red
-        else:
-            tilemap[row][column]=pink
-        
+gallery = pg.image.load("Ground Sprite Pack\gallery.png")
 
+tilemap=[[earth for y in range(mapheight)] for x in range(mapwidth)]
+
+#
+#for row in range(mapwidth):
+#    for column in range(mapheight):
+#        if row in border_tiles_V:
+#            tilemap[row][column]=red
+#        elif column in border_tiles_H:
+#            tilemap[row][column]=red
+#        else:
+#            tilemap[row][column]=pink
 
 ###############################################################################
 ###################           Avatar Images         ###########################
@@ -155,6 +163,7 @@ Back_images_folder_path=os.path.join(image_path,"GiannisBack")
 Back_images_path=[os.path.join(Back_images_folder_path,i+".png") for i in Back_images]
 BackHead=[pg.image.load(i) for i in Back_images_path]
 
+
 ###############################################################################
 ######################                               ##########################
 ######################             CLASSES           ##########################
@@ -165,7 +174,7 @@ BackHead=[pg.image.load(i) for i in Back_images_path]
 #######################            AVATARS           ##########################
 ###############################################################################
             
-class Avatar():
+class Avatar(pg.sprite.Sprite):
     # Avatar position and size
     # The position and size are give as artibutes
     # while speed, jump, walking direction and count steps
@@ -189,59 +198,60 @@ class Avatar():
         self.right = False
         self.frond = False
         self.back = False
+        self.stand = False
         self.WalkCount = 0
         self.StandingCount = 0
+    
+        ## Avatar is inside buildins
+        self.inside = False
+      
         
         self.actionTime=timeUnit()
+        #Avatar's boundaries
+        # the have to be renew in every movement
+        # intire image of avatar
+#       self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
+        # just the legs
+        self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
         
-    def movement(self):
-        ## Moving Keys
-        moving_keys=pg.key.get_pressed()
         
-        # moving left and right
-        if moving_keys[pg.K_RIGHT] and self.x < screen_width - self.speed - 50:
-            self.x += self.speed
-            self.left = False
-            self.right = True
-            self.frond = False
-            self.back = False
-        elif moving_keys[pg.K_LEFT] and self.x > self.speed:
-            self.x-=self.speed
-            self.left = True
-            self.right = False
-            self.frond = False
-            self.back = False
-        else:
-            # Doing nothing
-            self.left = False
-            self.right = False
-            self.frond = True
-            self.back = False
-            self.WalkCount=0
-        #moving up and down and jumping
-        if not self.jumping:
-            if moving_keys[pg.K_UP] and self.y > 0:
-                self.y-=self.speed
-                self.left = False
-                self.right = False
-                self.frond = False
-                self.back = True 
-            if moving_keys[pg.K_DOWN] and self.y < (screen_height - self.height - self.speed):
-                self.y+=self.speed
-                self.left = False
-                self.right = False
-                self.frond = True
-                self.back = False
-            if moving_keys[pg.K_SPACE] and player.y > 2*player.jump_step_max**2:
-                self.jumping = True
-                self.left = False
-                self.right = False
-                self.frond = True
-                self.back = False
-        else:
-            self.Jump()
-
-                
+    def DoNothing(self):
+        self.left = False
+        self.right = False
+        self.frond = False
+        self.back = False
+        self.stand = True
+        self.WalkCount=0
+        self.Free_to_move = True
+    def DoRight(self):
+        self.left = False
+        self.right = True
+        self.frond = False
+        self.back = False
+        self.stand = False
+        self.Free_to_move = True
+    def DoLeft(self):
+        self.left = True
+        self.right = False
+        self.frond = False
+        self.back = False
+        self.stand = False
+        self.Free_to_move = True
+    def DoBack(self):
+        self.left = False
+        self.right = False
+        self.frond = False
+        self.back = True
+        self.stand = False
+        self.Free_to_move = True
+    def DoFace(self):
+        self.left = False
+        self.right = False
+        self.frond = True
+        self.back = False 
+        self.stand = False
+        
+        
     def Jump(self):
         if self.jumping == True:
             if self.jump_step >= -self.jump_step_max :
@@ -255,7 +265,7 @@ class Avatar():
                 self.jump_step = self.jump_step_max
             
     def WaitingSequence(self):
-        waiting=1000 # msec
+        waiting=6000 # msec
         if self.actionTime.waitingAct(waiting):
             if self.StandingCount+1>7:
                 self.StandingCount=0
@@ -274,7 +284,6 @@ class Avatar():
             self.jumping = True
             if self.StandingCount+1>9:
                 self.StandingCount=0
-                self.jumping = False
             else:
                 self.Jump()
                 #dispalying action
@@ -285,14 +294,91 @@ class Avatar():
             #dispalying action
             gameDisplay.blit(Face[0],(self.x,self.y))        
             
+    
         
+    def movement(self):
+        ## Moving Keys
+        moving_keys=pg.key.get_pressed()
+        #self.Free_to_move moving left and right
+        if self.Free_to_move:
+            if moving_keys[pg.K_RIGHT]:
+                self.x += self.speed
+                self.DoRight()
+#                self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
+                self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+            elif moving_keys[pg.K_LEFT]:
+                self.x-=self.speed
+#                self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
+                self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+                self.DoLeft()
+            else:
+                self.DoNothing()
+           
+            #moving up and down and jumping
+            if not self.jumping:
+                if moving_keys[pg.K_UP]:
+                    self.y-=self.speed
+#                    self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
+                    self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+                    self.DoBack()
+                if moving_keys[pg.K_DOWN]:
+                    self.y+=self.speed
+#                    self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
+                    self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+                    self.DoFace()
+                if moving_keys[pg.K_SPACE] and player.y > 2*player.jump_step_max**2:
+#                    self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
+                    self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+                    self.jumping = True
+                    self.DoFace()
+            else:
+                self.Jump()
+
+               
+           ################################
+           ###    Checking for Walls    ###
+           ################################
+            for wall in walls:
+                if self.hitbox.colliderect(wall):
+                    self.Free_to_move = False
+                    if moving_keys[pg.K_RIGHT]:
+                        self.Free_to_move = False
+                        self.TextMessage("I can't go there", self.x, self.y)
+                        self.DoNothing()
+                        clock.tick(2000)
+                    if moving_keys[pg.K_LEFT]:
+                        self.Free_to_move = False
+                        self.TextMessage("I can't go there", self.x, self.y)
+                        self.DoNothing()
+                        clock.tick(2000)
+                    if moving_keys[pg.K_UP]:
+                        self.Free_to_move = False
+                        self.TextMessage("I can't go there", self.x, self.y)
+                        self.DoNothing()
+                        clock.tick(2000)
+                    if moving_keys[pg.K_DOWN]:
+                        self.Free_to_move = False
+                        self.TextMessage("I can't go there", self.x, self.y)
+                        self.DoNothing()
+                        clock.tick(2000)
+#            draw avatar's hitbox            
+#            pg.draw.rect(gameDisplay, red, self.hitbox,2)      
+            
+           ####################################
+           ###    Checking for Buildings    ###
+           ####################################
+            for building in BuildingsSurface:
+                    if self.hitbox.colliderect(building):
+                        self.jumping = False
+                        self.inside = True
+                    else:
+                        self.inside = False
+                        
+
     def drawAvatar(self, gameDisplay):
         #walking image number of frames
         if self.WalkCount+1>31:
             self.WalkCount=0
-        # standing image number of frames
-        if self.StandingCount+1>7:
-            self.StandingCount=0
         if self.right:
             # count time after this action
             self.actionTime=timeUnit()
@@ -310,51 +396,175 @@ class Avatar():
             self.actionTime=timeUnit()
             #dispalying action
             gameDisplay.blit(BackHead[0],(self.x,self.y))    
-        else:
-            if self.jumping:
+        elif self.frond:
                 # count time after this action
-                self.actionTime=timeUnit()
+            self.actionTime=timeUnit()
                 #dispalying action
-                gameDisplay.blit(Face[0],(self.x,self.y))
-            else:
-                self.WaitingSequence()
+            gameDisplay.blit(Face[0],(self.x,self.y))
+        else:
+            self.WaitingSequence()
+        #Avatar's boundaries
+#        self.hitbox=(self.x+4, self.y, 20, 32)
+#        pg.draw.rect(gameDisplay,black, self.hitbox,2)
                 
-                
-  
+    def TextMessage(self, message, x, y,color = black):
+        self.message = message
+        self.color = color
+        self.text = font.render(self.message, True, self.color)
+        self.box=pg.Rect(self.x, self.y-self.text.get_height(),self.text.get_width(),self.text.get_height())
+        pg.draw.rect(gameDisplay, white, self.box)
+        gameDisplay.blit(self.text,(x,y-self.text.get_height()))
+        gameDisplay.blit(Face[0],(self.x,self.y))
+        pg.display.flip()
+        
+        
+            ###############################################################
+    ##############      Action inside Buildings       #############
+    ###############################################################
     
+
+                
+            
 
 ###############################################################################
 ########################          WALLS             ###########################
 ###############################################################################
 
 ####### type_of_wall takes arguments the shapes of pygame.draw modulw
-class Wall():
+class Wall(pg.Rect):
     
-    def rectWall(self, x, y, width=10, height=10, color=black, outline=0):
+    def __init__(self, x, y, width, height):
+        pg.Rect.__init__(self, x, y, width, height)
         #Wall's position (top left)
         self.x = x
         self.y = y
         #Wall's size
         self.width = width
         self.height = height
-        self.color = color
-        self.outline = outline
-            
-        self.position=(self.x, self.y, self.width, self.height)
-        pg.draw.rect(gameDisplay, self.color, self.position, self.outline)
-                
-    def CircleWall(self, center_x, center_y, radius=1, color=black, outline=0):
-        #Wall's position (top left)
-        self.center_x = center_x
-        self.center_y = center_y
-        self.radius = radius
-        #Wall's size
-        self.color = color
-        self.outline = outline
+        self.rect = pg.Rect(self.x, self.y, self.width, self.height)
+        walls.append(self)
         
-        self.position=(self.center_x, self.center_y)
-        pg.draw.circle(gameDisplay, self.color, self.position, self.radius, self.outline)
+class rectWall(Wall):
+    def __init__(self, x, y, width, height):
+        Wall.__init__ (self, x, y, width, height)
+        self.hitbox = self.rect
+                
+class CircleWall(Wall):
+    def __init__(self, x, y, radius=10, width=10, height=10):
+        Wall.__init__ (self, x, y, width=10, height=10)
+        self.radius = radius
+        self.hitbox=pg.Rect(self.x, self.y, 2*self.radius, 2*self.radius)
+        self.center = (self.x + self.radius, self.y + self.radius) 
+        walls.append(self.hitbox)
+#        pg.draw.rect(gameDisplay, red, self.hitbox,2)
+
+
+class Door(pg.Rect):
+    
+    def __init__(self, x, y, width, length):
+        self.width = width
+        self.length = length
+        if self.width < self.length:
+            pg.Rect.__init__(self, x, y, self.width, self.length)
+            self.hitbox = pg.Rect(self.x, self.y, self.width, self.length)
+        else:
+            pg.Rect.__init__(self, x, y, self.length, self.width)
+            self.hitbox = pg.Rect(self.x, self.y, self.length, self.width)
+        doors.append(self)
+    
+class Building(pg.Rect):
+    
+    def __init__(self, x_begin, y_begin, x_end, y_end, door):
+        self.x_begin = x_begin
+        self.x_end = x_end
+        self.y_begin = y_begin
+        self.y_end = y_end
+        self.width = x_end - x_begin
+        self.height = y_end - y_begin
+        pg.Rect.__init__(self, x_begin, y_begin, self.width, self.height)
+        self.WallWidth = 10
+        self.door = door
+        self.buildingWalls=[]
+        
+        paintingBuilding=pg.Rect(x_begin, y_begin, self.width, self.height)
+        BuildingsSurface.append(paintingBuilding)
+        
+        
+        ### The Door is on the LEft side
+        if self.door.x == self.x_begin:
+            DoorWallLenght1 = self.door.y - self.y_begin
+            DoorWallLenght2 = self.y_end - (self.door.y + self.door.length)
+            #Left
+            rectWall(self.x_begin, self.y_begin, self.WallWidth,  DoorWallLenght1)
+            rectWall(self.x_begin, self.door.y + self.door.length , self.WallWidth, DoorWallLenght2)
+            #Τop
+            rectWall(self.x_begin, self.y_begin, self.width, self.WallWidth)
+            #Bottom
+            rectWall(self.x_begin, self.y_end, self.width, self.WallWidth)
+            #Right
+            rectWall(self.x_end - self.WallWidth, self.y_begin, self.WallWidth, self.height)
+
+        
+        
+                ### The Door is on the Right side
+        if self.door.x == (self.x_end - self.WallWidth):
+            DoorWallLenght1 = self.door.y - self.y_begin
+            DoorWallLenght2 = self.y_end - (self.door.y + self.door.length)
+            #Left
+            rectWall(self.x_begin, self.y_begin, self.WallWidth,  self.height)
+            #Τop
+            rectWall(self.x_begin, self.y_begin, self.width, self.WallWidth)
+            #Bottom
+            rectWall(self.x_begin, self.y_end, self.width, self.WallWidth)
+            #Right
+            rectWall(self.x_end - self.WallWidth, self.y_begin, self.WallWidth, DoorWallLenght1)
+            rectWall(self.x_end - self.WallWidth, self.door.y + self.door.length , self.WallWidth, DoorWallLenght2)
             
+                        ### The Door is on the Top side
+        if self.door.y == self.y_begin:
+            DoorWallLenght2 = self.x_end - (self.door.x + self.door.length)
+            #Left
+            rectWall(self.x_begin, self.y_begin, self.WallWidth,  self.height)
+            #Τop
+            rectWall(self.x_begin, self.y_begin , self.door.length, self.WallWidth)
+            rectWall(self.door.x + self.door.length, self.y_begin, DoorWallLenght2 , self.WallWidth)
+            #Bottom
+            rectWall(self.x_begin, self.y_end, self.width, self.WallWidth)
+            #Right
+            rectWall(self.x_end - self.WallWidth, self.y_begin, self.WallWidth, self.height)
+
+
+                        ### The Door is on the Bottom side
+        if self.door.y == self.y_end:
+            DoorWallLenght2 = self.x_end - (self.door.x + self.door.length)
+            #Left
+            wall1=rectWall(self.x_begin, self.y_begin, self.WallWidth,  self.height)
+            pg.draw.rect(gameDisplay, red, wall1.rect)
+            #Τop
+            wall2=rectWall(self.x_begin, self.y_begin , self.width, self.WallWidth)
+            pg.draw.rect(gameDisplay, red, wall2.rect)
+            #Bottom
+            wall4=rectWall(self.x_begin, self.y_end, self.door.length, self.WallWidth)
+            pg.draw.rect(gameDisplay, red, wall4.rect)
+            wall3=rectWall(self.door.x + self.door.length, self.y_end, DoorWallLenght2 , self.WallWidth)
+            pg.draw.rect(gameDisplay, red, wall3.rect)
+            #Right
+            wall5=rectWall(self.x_end - self.WallWidth, self.y_begin, self.WallWidth, self.height)
+            pg.draw.rect(gameDisplay, red, wall5.rect)
+            
+
+###############################################################################
+#######################             HITBOX            #########################
+################################  ###############################################
+        
+class HitBox(pg.Rect):
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.rect = pg.Rect(self.x, self.y, self.width, self.height)
+           
 ###############################################################################
 #######################           Time Unit           #########################
 ###############################################################################            
@@ -398,72 +608,140 @@ def quitGame(crashed=False):
             crashed = True
         # presing key event
         if event.type == pg.KEYDOWN:
-            # ESCAPE --> Quit
+#            # ESCAPE --> Quit
             if event.key == pg.K_ESCAPE:
                 crashed = True
             # CTRL+Q -->Quit
             if pg.key.get_mods() and pg.KMOD_CTRL and event.key == pg.K_q:
                 crashed = True
-    return crashed         
+    return crashed     
+
+###############################################################################
+#########################         Quit Scene         ##########################
+###############################################################################
+        
+def quitScene():
+        #Quiting Scene
+    for event in pg.event.get(): 
+        if event.type == pg.KEYDOWN:
+            # ESCAPE --> Back to previous scene
+            if event.key ==pg.K_RETURN:
+                return True
+    return False
+
+                      
 
 ###############################################################################
 ##########################          Background          #######################
 ###############################################################################
-
+doors=[]
+screenborders={}
 def drawBackground():
         ### MAP
     for row in range(mapwidth):
         for column in range(mapheight):
             position=(row*tilesize,column*tilesize, tilesize,tilesize)
-            pg.draw.rect(gameDisplay,tilemap[row][column],position)        
-    ## shapes on thw screen 
-    ## Rectangural
-    walls=[]
-    walls.append(Wall().rectWall(100, 50, 20, 20, black, 50))
+            gameDisplay.blit(ground[tilemap[row][column]],position)   
     
-    Wall().rectWall(50,300,200,20, black)
-    
-    Wall().rectWall(500,60,100,100, black)
-    #Cicle
-    Wall().CircleWall(center_x=600,center_y=400,radius=100)
-    
-###############################################################################
-##########################          Collision           #######################
-###############################################################################
+    #screen borders
+    ScreenBorders()
+          
+    ### Painting's Gallery        
+    gameDisplay.blit(gallery,(500,60))
+    Building(548,108,652,202,Door(548,145,10,30))
 
-def Collision(object1,object2):
-    for w in object2:
-        if object1.x == object2[x].x:
-            return False
-        else:
-            return True
-        
+    
+
+def ScreenBorders(x_begin = 0, y_begin = 0, x_end = screen_width, y_end = screen_height, width = 10):
+        #screen borders
+    #top
+    rectWall(x_begin,y_begin,x_end,width)
+    screenborders["topBorder"]=rectWall(x_begin,y_begin,x_end,width)
+    #right
+    rectWall(x_end,y_begin,width,y_end)
+    screenborders["rightBorder"]=rectWall(x_end,y_begin,width,y_end)
+    #bottom
+    rectWall(x_begin,y_end,x_end,width)
+    screenborders["bottomBorder"]=rectWall(x_begin,y_end,x_end,width)
+    #left
+    rectWall(x_begin,y_begin,width,y_end)
+    screenborders["leftBorder"]=rectWall(x_begin,y_begin,width,y_end)
+    
+    
+    
+###############################################################################
+########################      Action inside Buildings       ###################
+###############################################################################
+    
+def Action_Inside_Building(player):
+    if player.inside == True and player.Free_to_move == False:
+        return True
+    else:
+        return False
+         
+              
+
+###############################################################################
+##########################          Draw Walls          #######################
+###############################################################################
+walls=[]
+BuildingsSurface=[]
+PaintingBuildingWalls=[]
+
+
+    #return walls
+###############################################################################
+##################             Text Message             #######################
+###############################################################################   
+
+def TextMessage(message, x, y,color = black):
+    text = font.render(message, True, color)
+    box=pg.Rect(x,y-text.get_height(),text.get_width(),text.get_height())
+    pg.draw.rect(gameDisplay, white, box)
+    gameDisplay.blit(text,(x,y-text.get_height()))
+    pg.display.flip() 
+    return text
+
+
 ###############################################################################
 #######################                                 #######################
 #######################              PLAYER             #######################
 #######################                                 #######################
 ###############################################################################
-player = Avatar(250,250,32,32)
+player = Avatar(500,200,32,32)
 
 ###############################################################################
 #######################                                 #######################
 #######################         Games Main Loop         #######################
 #######################                                 #######################
 ###############################################################################
+
+
 while not quitGame():
     quitGame()
     
-    #Background
-    drawBackground()
-    ### Moving the avatar
-    
-    player.movement()
-    
-    #frame per second
-    FramesPerSecond=100
-    clock.tick(FramesPerSecond)
-    
-    redrawGameWindow(player)
+    if Action_Inside_Building(player):
+        pg.display.flip()
+        text = font.render("Hello", True,black)
+        gameDisplay.fill(white)
+        gameDisplay.blit(text,(320 , 240))
+
+    else:
+        #Background
+        drawBackground()
+        ### Moving the avatar
+        
+        player.movement()
+        
+        FramesPerSecond=100
+       
+        #frame per second
+        
+        clock.tick(FramesPerSecond)
+        redrawGameWindow(player)
+        
+        
+ 
     
 pg.quit()
 quit()
