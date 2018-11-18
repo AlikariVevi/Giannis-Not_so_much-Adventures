@@ -1,12 +1,12 @@
+
 # -*- coding: utf-8 -*-
 """
 Spyder Editor
-
 This is a temporary script file.
 """
 
 import pygame as pg
-import os
+import os, random , time
 
 
 global red, green, blue, darkBlue, white, black, pink
@@ -24,6 +24,8 @@ darkBlue = (0,0,128)
 white = (255,255,255)
 black = (0,0,0)
 pink = (255,200,200)
+LoseScreenColor = (153,76,0)
+HelloScreenColor = (128,128,128)
 
 doors=[]
 screenborders={}
@@ -38,8 +40,14 @@ PaintingBuildingWalls=[]
 
 gallery = pg.image.load("Ground Sprite Pack\gallery.png")
 
+GiannisHome = pg.image.load("Ground Sprite Pack\GiannisHome.png")
+
 ###############################################################################
 ###################           Avatar Images         ###########################
+###############################################################################
+
+###############################################################################
+###################              Player             ###########################
 ###############################################################################
 image_path="Giannis"
 
@@ -57,14 +65,17 @@ Right_images=["sprite_Giannis00","sprite_Giannis01","sprite_Giannis02",
               "sprite_Giannis27","sprite_Giannis28","sprite_Giannis29",
               "sprite_Giannis30"]
 
+
+
+    
 Walking_images_path=os.path.join(image_path,"GiannisWalking")
 Right_images_path=[os.path.join(Walking_images_path,i+".png") for i in Right_images]
 
 Walking_Right=[pg.image.load(i) for i in Right_images_path]
 Walking_Left=[pg.transform.flip(i,True,False) for i in Walking_Right]
 
-
-
+Bigger_Walking_Right_400 = [pg.transform.scale(im,(400,400)) for im in Walking_Right]
+Bigger_Walking_Left_400 = [pg.transform.scale(im,(400,400)) for im in Walking_Left]
 
 ##Waving
 ## One Hand
@@ -73,9 +84,12 @@ Waving_images=["sprite_GiannisWaving0","sprite_GiannisWaving1",
                "sprite_GiannisWaving4",
                "sprite_GiannisWaving5","sprite_GiannisWaving6"]
 
+
 Waving_images_folder_path=os.path.join(image_path,"GiannisWaving")
 Waving_images_path=[os.path.join(Waving_images_folder_path,i+".png") for i in Waving_images]
 Waving=[pg.image.load(i) for i in Waving_images_path]
+
+Bigger_Waving_400 = [pg.transform.scale(im,(400,400)) for im in Waving]
 ## Two Hand
 Waving_2Hands_images=["sprite_GiannisWavingBothHAnds0",
                        "sprite_GiannisWavingBothHAnds1",
@@ -91,11 +105,15 @@ Waving_2Hands_images_folder_path=os.path.join(image_path,"GiannisWavingBOthHAnds
 Waving_2Hands_images_path=[os.path.join(Waving_2Hands_images_folder_path,i+".png") for i in Waving_2Hands_images]
 Waving_2Hands=[pg.image.load(i) for i in Waving_2Hands_images_path]
 
+Bigger_Waving_2Hands_400 = [pg.transform.scale(im,(400,400)) for im in Waving_2Hands]
+
 ## Avatar Frond
 Frond_images=["GiannisStanding"]
 Frond_images_folder_path=os.path.join(image_path,"GiannisFrond")
 Frond_images_path=[os.path.join(Frond_images_folder_path,i+".png") for i in Frond_images]
 Face=[pg.image.load(i) for i in Frond_images_path]
+
+Bigger_Frond_400 = [pg.transform.scale(im,(400,400)) for im in Face]
 
 ## Avatar Back
 Back_images=["GiannisBack"]
@@ -103,6 +121,134 @@ Back_images_folder_path=os.path.join(image_path,"GiannisBack")
 Back_images_path=[os.path.join(Back_images_folder_path,i+".png") for i in Back_images]
 BackHead=[pg.image.load(i) for i in Back_images_path]
 
+Bigger_BackHead_400 = [pg.transform.scale(im,(400,400)) for im in BackHead]
+
+Falling_Down_images =["sprite_GiannisFalling0","sprite_GiannisFalling1",
+                      "sprite_GiannisFalling2","sprite_GiannisFalling3",
+                      "sprite_GiannisFalling4","sprite_GiannisFalling5",
+                      "sprite_GiannisFalling6","sprite_GiannisFalling7",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8","sprite_GiannisFalling8",
+                      "sprite_GiannisFalling8"]
+
+Falling_Down_images_folder_path=os.path.join(image_path,"Giannis_Falling")
+Falling_Down_images_path=[os.path.join(Falling_Down_images_folder_path,i+".png") for i in Falling_Down_images]
+Falling_Down=[pg.image.load(i) for i in Waving_2Hands_images_path]
+
+Falling_Down_Left=[pg.image.load(i) for i in Falling_Down_images_path]
+Falling_Down_Right=[pg.transform.flip(i,True,False) for i in Falling_Down_Left]
+
+Bigger_Falling_Down_Left_400 = [pg.transform.scale(im,(400,400)) for im in Falling_Down_Left]
+Bigger_Falling_Down_Right_400 = [pg.transform.scale(im,(400,400)) for im in Falling_Down_Right]
+
+
+Dead_Images = ["sprite_Giannis_Vampire_Kill" , "sprite_Giannis_Werewolf_Kill"]
+
+Dead_Images_path=[os.path.join(image_path,i+".png") for i in Dead_Images]
+
+Giannis_Dead_Left = [pg.image.load(i) for i in Dead_Images_path] 
+Giannis_Dead_Right = [pg.transform.flip(i,True,False) for i in Giannis_Dead_Left] 
+
+Bigger_Giannis_Dead_Left_400 = [pg.transform.scale(im,(400,400)) for im in Giannis_Dead_Left ]
+Bigger_Giannis_Dead_Right_400 = [pg.transform.scale(im,(400,400)) for im in Giannis_Dead_Right]
+
+
+###############################################################################
+###################              Vampire            ###########################
+###############################################################################
+
+image_path_Vamp="Vampire"
+
+##Walking
+
+Right_images_Vamp=["sprite_Vampire_Walking00","sprite_Vampire_Walking01",
+                   "sprite_Vampire_Walking02","sprite_Vampire_Walking03",
+                   "sprite_Vampire_Walking04","sprite_Vampire_Walking05",
+                   "sprite_Vampire_Walking06","sprite_Vampire_Walking07",
+                   "sprite_Vampire_Walking08","sprite_Vampire_Walking09",
+                   "sprite_Vampire_Walking10","sprite_Vampire_Walking11",
+                   "sprite_Vampire_Walking12","sprite_Vampire_Walking13",
+                   "sprite_Vampire_Walking14","sprite_Vampire_Walking15",
+                   "sprite_Vampire_Walking16","sprite_Vampire_Walking17",
+                   "sprite_Vampire_Walking18","sprite_Vampire_Walking19",
+                   "sprite_Vampire_Walking20","sprite_Vampire_Walking21",
+                   "sprite_Vampire_Walking22","sprite_Vampire_Walking23",
+                   "sprite_Vampire_Walking24","sprite_Vampire_Walking25",
+                   "sprite_Vampire_Walking26","sprite_Vampire_Walking27"]
+
+Walking_images_path_Vamp=os.path.join(image_path_Vamp,"VampireWalking")
+Right_images_path_Vamp=[os.path.join(Walking_images_path_Vamp,i+".png") for i in Right_images_Vamp]
+
+Walking_Right_Vamp=[pg.image.load(i) for i in Right_images_path_Vamp]
+Walking_Left_Vamp=[pg.transform.flip(i,True,False) for i in Walking_Right_Vamp]
+
+#Falling
+Falling_images_Vamp=["sprite_Vampire_Falling0","sprite_Vampire_Falling1",
+                   "sprite_Vampire_Falling2","sprite_Vampire_Falling3",
+                   "sprite_Vampire_Falling4","sprite_Vampire_Falling5",
+                   "sprite_Vampire_Falling6","sprite_Vampire_Falling7",
+                   "sprite_Vampire_Falling8"]
+
+Falling_images_path_Vamp=os.path.join(image_path_Vamp,"Vampire_Falling")
+Falling_Right_images_path_Vamp=[os.path.join(Falling_images_path_Vamp,i+".png") for i in Falling_images_Vamp]
+
+Falling_Right_Vamp=[pg.image.load(i) for i in Falling_Right_images_path_Vamp]
+Falling_Left_Vamp=[pg.transform.flip(i,True,False) for i in Falling_Right_Vamp]
+
+
+
+###############################################################################
+###################             Werewolf            ###########################
+###############################################################################
+
+image_path_Wer="Werewolf"
+
+##Walking
+
+Right_images_Wer=["sprite_WereWolfWalking00","sprite_WereWolfWalking01",
+                   "sprite_WereWolfWalking02","sprite_WereWolfWalking03",
+                   "sprite_WereWolfWalking04","sprite_WereWolfWalking05",
+                   "sprite_WereWolfWalking06","sprite_WereWolfWalking07",
+                   "sprite_WereWolfWalking08","sprite_WereWolfWalking09",
+                   "sprite_WereWolfWalking10","sprite_WereWolfWalking11",
+                   "sprite_WereWolfWalking12","sprite_WereWolfWalking13",
+                   "sprite_WereWolfWalking14","sprite_WereWolfWalking15",
+                   "sprite_WereWolfWalking16","sprite_WereWolfWalking17",
+                   "sprite_WereWolfWalking18","sprite_WereWolfWalking19",
+                   "sprite_WereWolfWalking20","sprite_WereWolfWalking21",
+                   "sprite_WereWolfWalking22","sprite_WereWolfWalking23",
+                   "sprite_WereWolfWalking24","sprite_WereWolfWalking25",
+                   "sprite_WereWolfWalking26","sprite_WereWolfWalking27",
+                   "sprite_WereWolfWalking28","sprite_WereWolfWalking29",
+                   "sprite_WereWolfWalking30"]
+
+Walking_images_path_Wer=os.path.join(image_path_Wer,"WereWolfWalking")
+Right_images_path_Wer=[os.path.join(Walking_images_path_Wer,i+".png") for i in Right_images_Wer]
+
+Walking_Right_Wer=[pg.image.load(i) for i in Right_images_path_Wer]
+Walking_Left_Wer=[pg.transform.flip(i,True,False) for i in Walking_Right_Wer]
+
+#Falling
+Falling_images_Wer=["sprite_WereWolf_Falling0","sprite_WereWolf_Falling1",
+                   "sprite_WereWolf_Falling2","sprite_WereWolf_Falling3",
+                   "sprite_WereWolf_Falling4","sprite_WereWolf_Falling5",
+                   "sprite_WereWolf_Falling6","sprite_WereWolf_Falling7",
+                   "sprite_WereWolf_Falling8"]
+
+Falling_images_path_Wer=os.path.join(image_path_Wer,"sprite_WerwWolfFalling")
+Falling_Right_images_path_Wer=[os.path.join(Falling_images_path_Wer,i+".png") for i in Falling_images_Wer]
+
+Falling_Right_Wer=[pg.image.load(i) for i in Falling_Right_images_path_Wer]
+Falling_Left_Wer=[pg.transform.flip(i,True,False) for i in Falling_Right_Wer]
 
 ###############################################################################
 ######################                               ##########################
@@ -118,7 +264,7 @@ class SceneBase:
     def __init__(self):
         self.next = self
     
-    def ProcessInput(self, events, pressed_keys):
+    def ProcessInput(self, events):
         print("uh-oh, you didn't override this in the child class")
 
     def Update(self):
@@ -133,12 +279,220 @@ class SceneBase:
     def Terminate(self):
         self.SwitchToScene(None)
 
+        
+class TitleScene(SceneBase):
+    def __init__(self):
+        SceneBase.__init__(self)
+    
+    def quitScene(self, event):
+        if event[pg.K_RETURN]:
+                # Move to the next scene when the user pressed Enter
+            self.SwitchToScene(TitleScene_2())
+            pg.time.delay(800)
+    
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        # For the sake of brevity, the title scene is a blank red screen
+        text1 = font.render("Hello!!", True,black)
+        text2 = font.render("This is Giannis,", True,black)
+        text3 = font.render("He wants to buy a diamont ring for his girlfriend.", True,black)
+        text4 = font.render("But he has no money", True,black)
+        screen.fill(HelloScreenColor)
+        texts = ((text1,(100 , 140)),(text2,(100 , 180)),(text3,(100 , 220)),(text4,(100,260)))
+        screen.blits(texts)
+        
+        gameDisplay.blit(Bigger_Frond_400[0],(600,100))
+        
 
+class TitleScene_2(SceneBase):
+    def __init__(self):
+        SceneBase.__init__(self)
+    
+    def quitScene(self, event):
+        if event[pg.K_RETURN]:
+            self.SwitchToScene(TitleScene_3())
+            pg.time.delay(800)
+    
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        # For the sake of brevity, the title scene is a blank red screen
+        text1 = font.render("He also has to cross through", True,black)
+        text2 = font.render("an area full of ", True,black)
+        text3 = font.render("Vampires and Werewolfs.", True,black)
+        screen.fill(HelloScreenColor)
+        texts = ((text1,(100 , 140)),(text2,(100 , 180)),(text3,(100 , 220)))
+        screen.blits(texts)
+        
+        gameDisplay.blit(Bigger_Frond_400[0],(600,100))
+        
+class TitleScene_3(SceneBase):
+    def __init__(self):
+        SceneBase.__init__(self)
+    
+    def quitScene(self, event):
+        if event[pg.K_RETURN]:
+            self.SwitchToScene(GameScene())
+            pg.time.delay(800)
+    
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        # For the sake of brevity, the title scene is a blank red screen
+        text1 = font.render("Thankfully he has", True,black)
+        text2 = font.render("a powerful stun gun", True,black)
+        text3 = font.render("that can nock them off", True,black)
+        text4 = font.render("for a good amount of time", True,black)
+        screen.fill(HelloScreenColor)
+        texts = ((text1,(100 , 140)),(text2,(100 , 180)),(text3,(100 , 220)),(text4,(100 , 260)))
+        screen.blits(texts)
+        
+        gameDisplay.blit(Bigger_Frond_400[0],(600,100))
+
+
+
+class DeadScene1(SceneBase):
+    def __init__(self):
+        SceneBase.__init__(self)
+    
+    def quitScene(self, event):
+        if event[pg.K_RETURN]:
+            self.SwitchToScene(DeadScene2())
+            pg.time.delay(800)
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        # For the sake of brevity, the title scene is a blank red screen
+        screen.fill(LoseScreenColor )
+        if player.killed_by_Vampire:
+            text = font.render("This Vampire suck you dry", True,black)
+            screen.blit(text,(320 , 240))
+            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[0],(600,100))
+            
+        if player.killed_by_Werewolf:
+            text = font.render("Your heart has been eaten by this Werewolf", True,black)
+            screen.blit(text,(220 , 240))
+            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[1],(600,100))
+            
+        
+        
+   
+
+class DeadScene2(SceneBase):
+    def __init__(self):
+        SceneBase.__init__(self)
+    
+    def quitScene(self, event):
+        if event[pg.K_RETURN]:
+            self.SwitchToScene(DeadScene3())
+            pg.time.delay(800)
+    
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        # For the sake of brevity, the title scene is a blank red screen
+        screen.fill(LoseScreenColor )
+        if player.killed_by_Vampire:
+            text = font.render("There is no more blood in your body", True,black) 
+            screen.blit(text,(220 , 240))
+            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[0],(600,100))
+
+        if player.killed_by_Werewolf:
+            text = font.render("You no loger have a heart", True,black)
+            screen.blit(text,(320 , 240))
+            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[1],(600,100))
+            
+           
+class DeadScene3(SceneBase):
+    def __init__(self):
+        SceneBase.__init__(self)
+    
+    def quitScene(self, event):
+        if event[pg.K_RETURN]:
+            self.SwitchToScene(DeadScene4())
+            pg.time.delay(800)
+            
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        # For the sake of brevity, the title scene is a blank red screen
+        screen.fill(LoseScreenColor )
+        if player.killed_by_Vampire:
+            text = font.render("Seriously you are dead", True,black)
+            screen.blit(text,(320 , 240))
+            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[0],(600,100))
+
+        if player.killed_by_Werewolf:
+            text = font.render("Literarly!! You are dead", True,black)
+            screen.blit(text,(320 , 240))
+            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[1],(600,100))
+            
+class DeadScene4(SceneBase):
+    def __init__(self):
+        SceneBase.__init__(self)
+    
+    def quitScene(self, event):
+        pass
+    
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        # For the sake of brevity, the title scene is a blank red screen
+        screen.fill(LoseScreenColor )
+        if player.killed_by_Vampire:
+            text = font.render("I have nothing else to say... Please, restart the game", True,black)
+            screen.blit(text,(200 , 240))
+            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[0],(600,100))
+
+        if player.killed_by_Werewolf:
+            text = font.render("YOU ARE DEAD... please restart the game", True,black)
+            screen.blit(text,(220 , 240))
+            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[1],(600,100))
+        
+class GameScene(SceneBase):
+    def __init__(self):
+        SceneBase.__init__(self)
+    
+    def quitScene(self, event):
+        pass
+        
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        # The game scene is just a blank blue screen 
+                    #Background
+        drawBackground()
+            ### Moving the avatar
+        player.movement()
+        if player.YouLose:
+                # Move to the next scene when the user pressed Enter
+            self.SwitchToScene(DeadScene1())
+
+        redrawGameWindow(player)
+
+
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Nov 16 16:07:26 2018
+
+@author: Vevi
+"""
+###############################################################################
 ###############################################################################
 #######################            AVATARS           ##########################
 ###############################################################################
+###############################################################################
             
-class Avatar(pg.sprite.Sprite):
+class Avatar(object):
     # Avatar position and size
     # The position and size are give as artibutes
     # while speed, jump, walking direction and count steps
@@ -165,6 +519,8 @@ class Avatar(pg.sprite.Sprite):
         self.stand = False
         self.WalkCount = 0
         self.StandingCount = 0
+        self.dying = False
+        self.DyingCount = 0
     
         ## Avatar is inside buildins
         self.inside = False
@@ -174,7 +530,7 @@ class Avatar(pg.sprite.Sprite):
         #Avatar's boundaries
         # the have to be renew in every movement
         # intire image of avatar
-#       self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
+        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
         # just the legs
         self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
         
@@ -185,14 +541,19 @@ class Avatar(pg.sprite.Sprite):
         self.frond = False
         self.back = False
         self.stand = True
+        self.dying = False
         self.WalkCount=0
         self.Free_to_move = True
+        self.moving_keys=pg.key.get_pressed()
+#        if moving_Keys[pg.K_RIGHT]:
+#            self.Do
     def DoRight(self):
         self.left = False
         self.right = True
         self.frond = False
         self.back = False
         self.stand = False
+        self.dying = False
         self.Free_to_move = True
     def DoLeft(self):
         self.left = True
@@ -201,6 +562,7 @@ class Avatar(pg.sprite.Sprite):
         self.back = False
         self.stand = False
         self.Free_to_move = True
+        self.dying = False
     def DoBack(self):
         self.left = False
         self.right = False
@@ -208,16 +570,56 @@ class Avatar(pg.sprite.Sprite):
         self.back = True
         self.stand = False
         self.Free_to_move = True
+        self.dying = False
     def DoFace(self):
         self.left = False
         self.right = False
         self.frond = True
         self.back = False 
         self.stand = False
+        self.dying = False
+    def DoDying(self):
+        self.left = False
+        self.right = False
+        self.frond = False
+        self.back = False 
+        self.stand = False
+        self.dying = True
         
+    def movement(self):
+            pass
+                        
+
+    def drawAvatar(self, gameDisplay):
+        self.gameDisplay = gameDisplay
+            
+    def InsideBuildings(self, BuildingsSurface):
+        self.BuildingsSurface = BuildingsSurface
+        ####################################
+        ###    Checking for Buildings    ###
+        ####################################
+        for building in BuildingsSurface:
+            if self.hitbox.colliderect(building):
+#                self.jumping = False
+                self.inside = True
+            else:
+                self.inside = False
+ 
+###############################################################################
+#######################            PLAYER            ##########################
+###############################################################################
+       
+class Player(Avatar): 
+    
+    def __init__(self, x, y, width, height):
+        Avatar.__init__(self, x, y, width, height)
+        self.YouLose = False
+        self.killed_by_Vampire = False
+        self.killed_by_Werewolf = False
         
+    
     def Jump(self):
-        if self.jumping == True:
+        if self.jumping == True and self.inside == False:
             if self.jump_step >= -self.jump_step_max :
                 direction = 1
                 if self.jump_step < 0:
@@ -226,10 +628,10 @@ class Avatar(pg.sprite.Sprite):
                 self.jump_step -= 1
             else:
                 self.jumping = False
-                self.jump_step = self.jump_step_max
-            
+                self.jump_step = self.jump_step_max    
+    
     def WaitingSequence(self):
-        waiting=6000 # msec
+        waiting=10000 # msec
         if self.actionTime.waitingAct(waiting):
             if self.StandingCount+1>7:
                 self.StandingCount=0
@@ -253,78 +655,118 @@ class Avatar(pg.sprite.Sprite):
                 #dispalying action
                 gameDisplay.blit(Waving_2Hands[self.StandingCount],(self.x,self.y))
                 self.StandingCount+=1
+                self.actionTime=timeUnit()
+                
                                             
         else:
             #dispalying action
-            gameDisplay.blit(Face[0],(self.x,self.y))        
+            gameDisplay.blit(Face[0],(self.x,self.y))
             
+
     
-        
     def movement(self):
         ## Moving Keys
-        moving_keys=pg.key.get_pressed()
+        self.moving_keys=pg.key.get_pressed()
+        self.dying = False
         #self.Free_to_move moving left and right
         if self.Free_to_move:
-            if moving_keys[pg.K_RIGHT]:
-                self.x += self.speed
-                self.DoRight()
-#                self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
-                self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
-            elif moving_keys[pg.K_LEFT]:
-                self.x-=self.speed
-#                self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
-                self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
-                self.DoLeft()
-            else:
-                self.DoNothing()
-           
-            #moving up and down and jumping
-            if not self.jumping:
-                if moving_keys[pg.K_UP]:
+            if self.speed > 0:
+                if self.moving_keys[pg.K_RIGHT]:
+                    self.x += self.speed
+                    self.DoRight()
+                    self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                    self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+                elif self.moving_keys[pg.K_LEFT]:
+                    self.x-=self.speed
+                    self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                    self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+                    self.DoLeft()
+    
+               
+                #moving up and down
+                
+                elif self.moving_keys[pg.K_UP]:
                     self.y-=self.speed
-#                    self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
+                    self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
                     self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
                     self.DoBack()
-                if moving_keys[pg.K_DOWN]:
+                elif self.moving_keys[pg.K_DOWN]:
                     self.y+=self.speed
-#                    self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
+                    self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
                     self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
                     self.DoFace()
-                if moving_keys[pg.K_SPACE] and player.y > 2*player.jump_step_max**2:
-#                    self.hitbox=pg.Rect((self.x+4), self.y, 20, 32)
+    #            if moving_keys[pg.K_SPACE] and player.y > 2*player.jump_step_max**2:
+    #                self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+    #                self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+    #                self.jumping = True
+    #                self.DoFace()
+                else:
+                    self.DoNothing()
+            
+            if self.speed < 0:
+                if self.moving_keys[pg.K_LEFT]:
+                    self.x += self.speed
+                    self.DoLeft()
+                    self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
                     self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
-                    self.jumping = True
-                    self.DoFace()
-            else:
-                self.Jump()
-
+                elif self.moving_keys[pg.K_RIGHT]:
+                    self.x-=self.speed
+                    self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                    self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+                    self.DoRight()
+    
                
-           ################################
+                #moving up and down
+                
+                elif self.moving_keys[pg.K_DOWN]:
+                    self.y-=self.speed
+                    self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                    self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+                    self.DoFace()
+                elif self.moving_keys[pg.K_UP]:
+                    self.y+=self.speed
+                    self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                    self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+                    self.DoBack()
+    #            if moving_keys[pg.K_SPACE] and player.y > 2*player.jump_step_max**2:
+    #                self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+    #                self.hitbox=pg.Rect((self.x+8), self.y+20, 13, 10)
+    #                self.jumping = True
+    #                self.DoFace()
+                else:
+                    self.DoNothing()               
+#        else:
+#            self.x +=self.speed + 15
+        
+        ################################
            ###    Checking for Walls    ###
            ################################
             for wall in walls:
                 if self.hitbox.colliderect(wall):
-                    self.Free_to_move = False
-                    if moving_keys[pg.K_RIGHT]:
-                        self.Free_to_move = False
+#                    time.sleep(0.5)
+#                    self.Free_to_move = False
+                    self.speed = (-1)*self.speed
+                    if self.moving_keys[pg.K_RIGHT]:
+#                        self.Free_to_move = False
                         self.TextMessage("I can't go there", self.x, self.y)
                         self.DoNothing()
-                        clock.tick(2000)
-                    if moving_keys[pg.K_LEFT]:
-                        self.Free_to_move = False
+#                        clock.tick(2000)
+                    if self.moving_keys[pg.K_LEFT]:
+
+#                        self.Free_to_move = False
                         self.TextMessage("I can't go there", self.x, self.y)
                         self.DoNothing()
-                        clock.tick(2000)
-                    if moving_keys[pg.K_UP]:
-                        self.Free_to_move = False
+#                        clock.tick(2000)
+                    if self.moving_keys[pg.K_UP]:
+#                        
                         self.TextMessage("I can't go there", self.x, self.y)
                         self.DoNothing()
-                        clock.tick(2000)
-                    if moving_keys[pg.K_DOWN]:
-                        self.Free_to_move = False
+#                        clock.tick(2000)
+                    if self.moving_keys[pg.K_DOWN]:
                         self.TextMessage("I can't go there", self.x, self.y)
                         self.DoNothing()
-                        clock.tick(2000)
+                
+#                        clock.tick(2000)
 #            draw avatar's hitbox            
 #            pg.draw.rect(gameDisplay, red, self.hitbox,2)      
             
@@ -337,12 +779,26 @@ class Avatar(pg.sprite.Sprite):
                         self.inside = True
                     else:
                         self.inside = False
-                        
+            
+        for enemy in VampsANDWerewolfs :
+            if enemy.AttackingBox.colliderect(player.hitboxBody):
+                Attacking(enemy, self)
+                self.dying = True
+                if enemy in Vamps:
+                    self.killed_by_Vampire = True
+                else:
+                    self.killed_by_Werewolf = True
+                    
+                    
 
     def drawAvatar(self, gameDisplay):
+        Avatar.drawAvatar(self, gameDisplay)
         #walking image number of frames
-        if self.WalkCount+1>31:
-            self.WalkCount=0
+        if self.WalkCount + 1 > 31:
+            self.WalkCount = 0
+        if self.DyingCount + 1 > 31:
+            self.DyingCount = 0
+            self.YouLose = True
         if self.right:
             # count time after this action
             self.actionTime=timeUnit()
@@ -365,6 +821,10 @@ class Avatar(pg.sprite.Sprite):
             self.actionTime=timeUnit()
                 #dispalying action
             gameDisplay.blit(Face[0],(self.x,self.y))
+        elif self.dying:
+            self.actionTime=timeUnit()
+            gameDisplay.blit(Falling_Down_Left[self.DyingCount],(self.x,self.y))
+            self.DyingCount += 1
         else:
             self.WaitingSequence()
         #Avatar's boundaries
@@ -380,16 +840,276 @@ class Avatar(pg.sprite.Sprite):
         gameDisplay.blit(self.text,(x,y-self.text.get_height()))
         gameDisplay.blit(Face[0],(self.x,self.y))
         pg.display.flip()
+#
+#    def drawAvatar_HelloScreen(self, gameDisplay, images):
+#        if self.WalkCount + 1 > 31:
+#            self.WalkCount = 0
+#        else:
+#            gameDisplay.blit(images[self.WalkCount],(self.x,self.y))
+#            self.WalkCount+=1
         
-        
-            ###############################################################
-    ##############      Action inside Buildings       #############
-    ###############################################################
-    
+###############################################################################
+#######################            Vampire            #########################
+###############################################################################
 
+
+class Vampire(Avatar): 
+    
+    def __init__(self, x, y, width, height, x_end , y_end):
+        Avatar.__init__(self, x, y, width, height)
+        self.x_end = x_end
+        self.y_end = y_end
+        self.path_x = [self.x, self.x_end]
+        self.path_y = [self.y, self.y_end]
+        self.random = random.randint(0, 10)
+        self.AttackingBox = pg.Rect((self.x+40), self.y, 100, 32)
+        
+        
+
+        
+        
+    def movement(self):
+        if self.Free_to_move == True:
+            if self.speed > 0:
+                if self.random < 5:
+                    if (self.x + self.speed) < self.path_x[1] :
+                        self.x += self.speed
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x+4), self.y-32, 100, 100)
+                        self.DoRight()
+#                        Attacking(self, player)
+                        
+
+                    else:
+                        self.speed = (-1)*self.speed
+                        self.WalkCount = 0
+                        self.random = random.randint(0, 10)
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-74), self.y-32, 100, 100)
+                        self.DoLeft()
+#                        Attacking(self, player)
+                        
+
+                else:
+                     if (self.y +self.speed) < self.path_y[1]:
+                        self.y += self.speed
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-32), self.y, 92, 92)
+                        self.DoFace()
+#                        Attacking(self, player)
+                        
+                     else:
+                        self.speed = (-1)*self.speed
+                        self.WalkCount = 0
+                        self.random = random.randint(0, 10)
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-32), self.y-55, 92, 92)
+                        self.DoBack()
+#                        Attacking(self, player)
+            else:
+                if self.random < 5:
+                    if  (self.x +self.speed) > self.path_x[0] :
+                        self.x += self.speed
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-74), self.y-32, 100, 100)
+                        self.DoLeft()
+#                        Attacking(self, player)
+                    else:
+                        self.speed = (-1)*self.speed
+                        self.WalkCount = 0
+                        self.random = random.randint(0, 10)
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-54), self.y-32, 100, 100)
+                        self.DoRight()
+#                        Attacking(self, player)
+                else:
+                     if (self.y + self.speed) > self.path_y[0]:
+                        self.y += self.speed
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-32), self.y-55, 92, 92)
+                        self.DoBack()
+#                        Attacking(self, player)
+                     else:
+                        self.speed = (-1)*self.speed
+                        self.WalkCount = 0
+                        self.random = random.randint(0, 10)
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-32), self.y, 92, 92)
+                        self.DoFace()
+#                        Attacking(self, player)
+
+           ################################
+           ###  Checking for Buildings  ###
+           ################################
                 
+            for building in BuildingsSurface:
+                if self.hitbox.colliderect(building):
+                    self.Free_to_move = False
+                    self.WalkCount = 0
+                    self.speed = (-1)*self.speed
+                    self.random = random.randint(0, 10)
+            
+                    
+            
+        
+
+
+    def drawAvatar(self, gameDisplay):
+        self.movement()
+        self.gameDisplay = gameDisplay
+        
+                #walking image number of frames
+        if self.WalkCount+1>27:
+            self.WalkCount=0
+        if self.speed > 0:
+            if self.random < 5:
+                gameDisplay.blit(Walking_Right_Vamp[self.WalkCount],(self.x,self.y))
+                self.WalkCount+=1
+            else:
+                gameDisplay.blit(Walking_Right_Vamp[0],(self.x,self.y))
+                self.WalkCount+=1
+        else:
+            if self.random < 5:
+                gameDisplay.blit(Walking_Left_Vamp[self.WalkCount],(self.x,self.y))
+                self.WalkCount+=1
+            else:
+                gameDisplay.blit(Walking_Right_Vamp[0],(self.x,self.y))
+                self.WalkCount+=1
             
 
+
+###############################################################################
+#######################         WereWolf             ##########################
+###############################################################################
+
+
+class WereWolf(Avatar): 
+    
+    def __init__(self, x, y, width, height, x_end, y_end):
+        Avatar.__init__(self, x, y, width, height)
+        self.x_end = x_end
+        self.y_end = y_end
+        self.path_x = [self.x, self.x_end]
+        self.path_y = [self.y, self.y_end]
+        self.random = random.randint(0, 10)
+        
+        
+    def movement(self):
+        if self.Free_to_move == True:
+            if self.speed > 0:
+                if self.random < 5:
+                    if (self.x + self.speed) < self.path_x[1] :
+                        self.x += self.speed
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x+4), self.y-32, 100, 100)
+                        self.DoRight()
+#                        Attacking(self, player)
+                        
+
+                    else:
+                        self.speed = (-1)*self.speed
+                        self.WalkCount = 0
+                        self.random = random.randint(0, 10)
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-74), self.y-32, 100, 100)
+                        self.DoLeft()
+#                        Attacking(self, player)
+                        
+
+                else:
+                     if (self.y +self.speed) < self.path_y[1]:
+                        self.y += self.speed
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-32), self.y, 92, 92)
+                        self.DoFace()
+#                        Attacking(self, player)
+                        
+                     else:
+                        self.speed = (-1)*self.speed
+                        self.WalkCount = 0
+                        self.random = random.randint(0, 10)
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-32), self.y-55, 92, 92)
+                        self.DoBack()
+#                        Attacking(self, player)
+            else:
+                if self.random < 5:
+                    if  (self.x +self.speed) > self.path_x[0] :
+                        self.x += self.speed
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-74), self.y-32, 100, 100)
+                        self.DoLeft()
+#                        Attacking(self, player)
+                    else:
+                        self.speed = (-1)*self.speed
+                        self.WalkCount = 0
+                        self.random = random.randint(0, 10)
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-54), self.y-32, 100, 100)
+                        self.DoRight()
+#                        Attacking(self, player)
+                else:
+                     if (self.y + self.speed) > self.path_y[0]:
+                        self.y += self.speed
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-32), self.y-55, 92, 92)
+                        self.DoBack()
+#                        Attacking(self, player)
+                     else:
+                        self.speed = (-1)*self.speed
+                        self.WalkCount = 0
+                        self.random = random.randint(0, 10)
+                        self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
+                        self.AttackingBox = pg.Rect((self.x-32), self.y, 92, 92)
+                        self.DoFace()
+#                        Attacking(self, player)          
+
+    def drawAvatar(self, gameDisplay):
+        self.gameDisplay = gameDisplay
+        self.movement()
+        self.gameDisplay = gameDisplay
+        
+                #walking image number of frames
+        if self.WalkCount+1>27:
+            self.WalkCount=0
+        if self.speed > 0:
+            if self.random < 5:
+                gameDisplay.blit(Walking_Right_Wer[self.WalkCount],(self.x,self.y))
+                self.WalkCount+=1
+            else:
+                gameDisplay.blit(Walking_Right_Wer[0],(self.x,self.y))
+                self.WalkCount+=1
+        else:
+            if self.random < 5:
+                gameDisplay.blit(Walking_Left_Wer[self.WalkCount],(self.x,self.y))
+                self.WalkCount+=1
+            else:
+                gameDisplay.blit(Walking_Right_Wer[0],(self.x,self.y))
+                self.WalkCount+=1
+    
+
+
+        
+            
+###############################################################################
+#######################          Stun Shoots         ##########################
+###############################################################################
+                
+class StunShoots():
+
+    def __init__(self, x, y, facing, radius, color = blue):
+        self.x = x
+        self.y = y
+        self.radius = radius
+        self.color = color
+        self.facing = facing
+        self.vel = 8*facing
+
+    def DrawShoot():
+        pg.draw.circle(gameDisplay, self.color, (self.x, self.y), self.radius)               
+                
+                
+                
 ###############################################################################
 ########################          WALLS             ###########################
 ###############################################################################
@@ -412,6 +1132,8 @@ class rectWall(Wall):
     def __init__(self, x, y, width, height):
         Wall.__init__ (self, x, y, width, height)
         self.hitbox = self.rect
+#        pg.draw.rect(gameDisplay, red, self.rect)
+
                 
 class CircleWall(Wall):
     def __init__(self, x, y, radius=10, width=10, height=10):
@@ -459,15 +1181,19 @@ class Building(pg.Rect):
             DoorWallLenght1 = self.door.y - self.y_begin
             DoorWallLenght2 = self.y_end - (self.door.y + self.door.length)
             #Left
-            rectWall(self.x_begin, self.y_begin, self.WallWidth,  DoorWallLenght1)
-            rectWall(self.x_begin, self.door.y + self.door.length , self.WallWidth, DoorWallLenght2)
+            wall1=rectWall(self.x_begin, self.y_begin, self.WallWidth,  DoorWallLenght1)
+#            pg.draw.rect(gameDisplay, red, wall1.rect)
+            wall2=rectWall(self.x_begin, self.door.y + self.door.length , self.WallWidth, DoorWallLenght2)
+#            pg.draw.rect(gameDisplay, red, wall2.rect)
             #Τop
-            rectWall(self.x_begin, self.y_begin, self.width, self.WallWidth)
+            wall3=rectWall(self.x_begin, self.y_begin, self.width, self.WallWidth)
+#            pg.draw.rect(gameDisplay, red, wall3.rect)
             #Bottom
-            rectWall(self.x_begin, self.y_end, self.width, self.WallWidth)
+            wall4=rectWall(self.x_begin, self.y_end, self.width, self.WallWidth)
+#            pg.draw.rect(gameDisplay, red, wall4.rect)
             #Right
-            rectWall(self.x_end - self.WallWidth, self.y_begin, self.WallWidth, self.height)
-
+            wall5=rectWall(self.x_end - self.WallWidth, self.y_begin, self.WallWidth, self.height)
+#            pg.draw.rect(gameDisplay, red, wall5.rect)
         
         
                 ### The Door is on the Right side
@@ -475,15 +1201,19 @@ class Building(pg.Rect):
             DoorWallLenght1 = self.door.y - self.y_begin
             DoorWallLenght2 = self.y_end - (self.door.y + self.door.length)
             #Left
-            rectWall(self.x_begin, self.y_begin, self.WallWidth,  self.height)
+            wall1 = rectWall(self.x_begin, self.y_begin, self.WallWidth,  self.height)
+#            pg.draw.rect(gameDisplay, red, wall1.rect)
             #Τop
-            rectWall(self.x_begin, self.y_begin, self.width, self.WallWidth)
+            wall2 = rectWall(self.x_begin, self.y_begin, self.width, self.WallWidth)
+#            pg.draw.rect(gameDisplay, red, wall2.rect)
             #Bottom
-            rectWall(self.x_begin, self.y_end, self.width, self.WallWidth)
+            wall3 =rectWall(self.x_begin, self.y_end, self.width, self.WallWidth)
+#            pg.draw.rect(gameDisplay, red, wall3.rect)
             #Right
-            rectWall(self.x_end - self.WallWidth, self.y_begin, self.WallWidth, DoorWallLenght1)
-            rectWall(self.x_end - self.WallWidth, self.door.y + self.door.length , self.WallWidth, DoorWallLenght2)
-            
+            wall4 = rectWall(self.x_end - self.WallWidth, self.y_begin, self.WallWidth, DoorWallLenght1)
+#            pg.draw.rect(gameDisplay, red, wall4.rect)
+            wall5 = rectWall(self.x_end - self.WallWidth, self.door.y + self.door.length , self.WallWidth, DoorWallLenght2)
+#            pg.draw.rect(gameDisplay, red, wall5.rect)
                         ### The Door is on the Top side
         if self.door.y == self.y_begin:
             DoorWallLenght2 = self.x_end - (self.door.x + self.door.length)
@@ -502,19 +1232,19 @@ class Building(pg.Rect):
         if self.door.y == self.y_end:
             DoorWallLenght2 = self.x_end - (self.door.x + self.door.length)
             #Left
-            wall1=rectWall(self.x_begin, self.y_begin, self.WallWidth,  self.height)
-            pg.draw.rect(gameDisplay, red, wall1.rect)
+            rectWall(self.x_begin, self.y_begin, self.WallWidth,  self.height)
+#            pg.draw.rect(gameDisplay, red, wall1.rect)
             #Τop
-            wall2=rectWall(self.x_begin, self.y_begin , self.width, self.WallWidth)
-            pg.draw.rect(gameDisplay, red, wall2.rect)
+            rectWall(self.x_begin, self.y_begin , self.width, self.WallWidth)
+#            pg.draw.rect(gameDisplay, red, wall2.rect)
             #Bottom
-            wall4=rectWall(self.x_begin, self.y_end, self.door.length, self.WallWidth)
-            pg.draw.rect(gameDisplay, red, wall4.rect)
-            wall3=rectWall(self.door.x + self.door.length, self.y_end, DoorWallLenght2 , self.WallWidth)
-            pg.draw.rect(gameDisplay, red, wall3.rect)
+            rectWall(self.x_begin, self.y_end, self.door.length, self.WallWidth)
+#            pg.draw.rect(gameDisplay, red, wall4.rect)
+            rectWall(self.door.x + self.door.length, self.y_end, DoorWallLenght2 , self.WallWidth)
+#            pg.draw.rect(gameDisplay, red, wall3.rect)
             #Right
-            wall5=rectWall(self.x_end - self.WallWidth, self.y_begin, self.WallWidth, self.height)
-            pg.draw.rect(gameDisplay, red, wall5.rect)
+            rectWall(self.x_end - self.WallWidth, self.y_begin, self.WallWidth, self.height)
+#
             
 
 ###############################################################################
@@ -662,19 +1392,29 @@ def quitGame(crashed=False):
     return crashed     
 
 ###############################################################################
-#########################         Quit Scene         ##########################
+#########################     Enemies Attacking      ##########################
 ###############################################################################
-        
-def quitScene():
-        #Quiting Scene
-    for event in pg.event.get(): 
-        if event.type == pg.KEYDOWN:
-            # ESCAPE --> Back to previous scene
-            if event.key ==pg.K_RETURN:
-                return True
-    return False
 
-                      
+
+
+
+def Attacking(enemy, player, waiting = 100, attacked = False):
+    enemy.player = player
+    if enemy.AttackingBox.colliderect(player.hitboxBody):
+        enemy.x = player.x
+        enemy.y = player.y
+    return attacked
+
+##############333??????????????????????????????????
+#def MovingAfterKill(enemy, player, waiting = 1000):
+
+        
+
+            
+
+            
+        
+                  
 
 ###############################################################################
 ##########################          Background          #######################
@@ -689,12 +1429,36 @@ def drawBackground():
     
     #screen borders
     ScreenBorders()
+
           
     ### Painting's Gallery        
     gameDisplay.blit(gallery,(500,60))
     Building(548,108,652,202,Door(548,145,10,30))
-
     
+    gameDisplay.blit(GiannisHome,(0,0))
+    Building(30,20,155,140,Door(145,80,10,30))
+
+    Vamp1.drawAvatar(gameDisplay)
+#    pg.draw.rect(gameDisplay, white, Vamp1.AttackingBox,2)
+    Vamp2.drawAvatar(gameDisplay)
+#    pg.draw.rect(gameDisplay, white, Vamp2.AttackingBox,2)
+    Vamp3.drawAvatar(gameDisplay)
+#    pg.draw.rect(gameDisplay, white, Vamp3.AttackingBox,2)
+    Vamp4.drawAvatar(gameDisplay)
+#    pg.draw.rect(gameDisplay, white, Vamp4.AttackingBox,2)
+    Vamp5.drawAvatar(gameDisplay)
+#    pg.draw.rect(gameDisplay, white, Vamp5.AttackingBox,2)
+    
+    Werewolf1.drawAvatar(gameDisplay)
+#    pg.draw.rect(gameDisplay, white, Werewolf1.AttackingBox,2)
+    Werewolf2.drawAvatar(gameDisplay)
+#    pg.draw.rect(gameDisplay, white, Werewolf2.AttackingBox,2)
+    Werewolf3.drawAvatar(gameDisplay)
+#    pg.draw.rect(gameDisplay, white, Werewolf3.AttackingBox,2)
+    Werewolf4.drawAvatar(gameDisplay)
+#    pg.draw.rect(gameDisplay, white, Werewolf4.AttackingBox,2)
+    Werewolf5.drawAvatar(gameDisplay)
+#    pg.draw.rect(gameDisplay, white, Werewolf5.AttackingBox,2)
 
 def ScreenBorders(x_begin = 0, y_begin = 0, x_end = screen_width, y_end = screen_height, width = 10):
         #screen borders
@@ -702,10 +1466,11 @@ def ScreenBorders(x_begin = 0, y_begin = 0, x_end = screen_width, y_end = screen
     rectWall(x_begin,y_begin,x_end,width)
     screenborders["topBorder"]=rectWall(x_begin,y_begin,x_end,width)
     #right
-    rectWall(x_end,y_begin,width,y_end)
+    rectWall(x_end-width,y_begin,width,y_end-width)
     screenborders["rightBorder"]=rectWall(x_end,y_begin,width,y_end)
+
     #bottom
-    rectWall(x_begin,y_end,x_end,width)
+    rectWall(x_begin,y_end-width,x_end-width,width)
     screenborders["bottomBorder"]=rectWall(x_begin,y_end,x_end,width)
     #left
     rectWall(x_begin,y_begin,width,y_end)
@@ -731,21 +1496,100 @@ def Action_Inside_Building(player):
 ##################             Text Message             #######################
 ###############################################################################   
 
-def TextMessage(message, x, y,color = black):
+def TextMessage(message, x, y,color = black, colorBox = white):
     text = font.render(message, True, color)
     box=pg.Rect(x,y-text.get_height(),text.get_width(),text.get_height())
-    pg.draw.rect(gameDisplay, white, box)
+    pg.draw.rect(gameDisplay, colorBox, box)
     gameDisplay.blit(text,(x,y-text.get_height()))
     pg.display.flip() 
     return text
 
+###############################################################################
+################             Random Vampire             #######################
+###############################################################################
+    
+def CreateVampire():
+    x1 = random.randint(150,1032)
+    x2 = random.randint(150,1032)+x1
+    y1 = random.randint(-32,582)
+    y2 = random.randint(-32,582)+y1
+    if abs(x1-x2)>200 and abs(y1-y2)>200:
+        Vamp = Vampire (x1,y1,32,32,x2,y2)
+        for building in BuildingsSurface:
+            if Vamp.hitboxBody.colliderect(building):
+                return CreateVampire()
+        return Vamp
+    else:
+        x2 = random.randint(150,1032)+x1
+        y2 = random.randint(-32,582)+y1
+    return CreateVampire()
+
+###############################################################################
+################             Random WereWolf            #######################
+###############################################################################
+    
+def CreateWerewolf():
+    x1 = random.randint(150,1032)
+    x2 = random.randint(150,1032)+x1
+    y1 = random.randint(-32,582)
+    y2 = random.randint(-32,582)+y1
+    if abs(x1-x2)>200 and abs(y1-y2)>200:
+        Werewolf = WereWolf (x1,y1,32,32,x2,y2)
+        for building in BuildingsSurface:
+            if Werewolf.hitboxBody.colliderect(building):
+                return CreateWerewolf()
+        return Werewolf
+    else:
+        x2 = random.randint(150,1032)+x1
+        y2 = random.randint(-32,582)+y1
+    return CreateWerewolf()
 
 ###############################################################################
 #######################                                 #######################
-#######################              PLAYER             #######################
+#######################              Avatars            #######################
 #######################                                 #######################
 ###############################################################################
-player = Avatar(500,200,32,32)
+player = Player(50,50,32,32)
+
+VampsANDWerewolfs = []
+
+Vamps = []
+Vamp1 = CreateVampire()
+Vamp2 = CreateVampire()
+Vamp3 = CreateVampire()
+Vamp4 = CreateVampire()
+Vamp5 = CreateVampire()
+Vamps.append(Vamp1)
+Vamps.append(Vamp2)
+Vamps.append(Vamp3)
+Vamps.append(Vamp4)
+Vamps.append(Vamp5)
+
+Werewolfs = []
+Werewolf1 = CreateWerewolf()
+Werewolf2 = CreateWerewolf()
+Werewolf3 = CreateWerewolf()
+Werewolf4 = CreateWerewolf()
+Werewolf5 = CreateWerewolf()
+Werewolfs.append(Werewolf1)
+Werewolfs.append(Werewolf2)
+Werewolfs.append(Werewolf3)
+Werewolfs.append(Werewolf4)
+Werewolfs.append(Werewolf5)
+
+
+VampsANDWerewolfs.append(Vamp1)
+VampsANDWerewolfs.append(Vamp2)
+VampsANDWerewolfs.append(Vamp3)
+VampsANDWerewolfs.append(Vamp4)
+VampsANDWerewolfs.append(Vamp5)
+VampsANDWerewolfs.append(Werewolf1)
+VampsANDWerewolfs.append(Werewolf2)
+VampsANDWerewolfs.append(Werewolf3)
+VampsANDWerewolfs.append(Werewolf4)
+VampsANDWerewolfs.append(Werewolf5)
+
+
 
 ###############################################################################
 #######################                                 #######################
@@ -753,35 +1597,24 @@ player = Avatar(500,200,32,32)
 #######################                                 #######################
 ###############################################################################
 
-def run_game():
+def run_game(starting_scene):
     pg.init()
     main()
+    active_scene = starting_scene
     while not quitGame():
         quitGame()
         
-        if Action_Inside_Building(player):
-            pg.display.flip()
-            text = font.render("Hello", True,black)
-            gameDisplay.fill(white)
-            gameDisplay.blit(text,(320 , 240))
+        key=pg.key.get_pressed()
     
-        else:
-            #Background
-            drawBackground()
-            ### Moving the avatar
-            
-            player.movement()
-            
-            FramesPerSecond=100
-           
-            #frame per second
-            
-            clock.tick(FramesPerSecond)
-            redrawGameWindow(player)
-            
-            
-     
+        active_scene.Update()
+        active_scene.Render(gameDisplay)
+        active_scene.quitScene(key)
+        pg.display.flip()
+        active_scene = active_scene.next
         
+           
+     
+        clock.tick(100)
     pg.quit()
-run_game()
+run_game(GameScene())
 quit()
