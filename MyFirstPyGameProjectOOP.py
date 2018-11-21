@@ -441,6 +441,7 @@ class TitleScene_3(SceneBase):
 
 
 
+
 class BeatenScene1(SceneBase):
     def __init__(self):
         SceneBase.__init__(self)
@@ -614,7 +615,10 @@ class GameScene(SceneBase):
             
                 # Move to the next scene when the user pressed Enter
             self.SwitchToScene(BeatenScene1())
-
+#        
+#        if player.hitWall_left:
+#            player.x -=10
+        
         redrawGameWindow(player)
 
 
@@ -751,6 +755,8 @@ class Player(Avatar):
         self.beaten_by_Werewolf = False 
         self.coins = 0
         self.injured = False
+
+        
         
         
     
@@ -804,6 +810,10 @@ class Player(Avatar):
         ## Moving Keys
         self.moving_keys=pg.key.get_pressed()
         self.dying = False
+        if self.injured:
+            self.speed = 1
+        else:
+            self.speed = 3
         #self.Free_to_move moving left and right
         if self.Free_to_move:
             if self.speed > 0:
@@ -872,7 +882,9 @@ class Player(Avatar):
     #                self.jumping = True
     #                self.DoFace()
                 else:
-                    self.DoNothing()               
+                    self.DoNothing()
+                    
+        
 #        else:
 #            self.x +=self.speed + 15
         
@@ -881,28 +893,34 @@ class Player(Avatar):
            ################################
             for wall in walls:
                 if self.hitbox.colliderect(wall):
-#                    time.sleep(0.5)
-#                    self.Free_to_move = False
-                    self.speed = (-1)*self.speed
+                    ## moving left
                     if self.moving_keys[pg.K_RIGHT]:
-#                        self.Free_to_move = False
-                        self.TextMessage("I can't go there", self.x, self.y)
+                        self.hitbox.left = wall.hitbox.right
                         self.DoNothing()
-#                        clock.tick(2000)
+                        self.x -=4
+                        self.TextMessage("I can't go there", self.x, self.y)
+                        pg.time.delay(400)
+                    ## moving right
                     if self.moving_keys[pg.K_LEFT]:
-
-#                        self.Free_to_move = False
-                        self.TextMessage("I can't go there", self.x, self.y)
+                        self.hitbox.right = wall.hitbox.left
                         self.DoNothing()
-#                        clock.tick(2000)
+                        self.x +=4
+                        self.TextMessage("I can't go there", self.x, self.y)
+                        pg.time.delay(400)
+                    ## moving up
                     if self.moving_keys[pg.K_UP]:
-#                        
-                        self.TextMessage("I can't go there", self.x, self.y)
+                        self.hitbox.top = wall.hitbox.bottom
                         self.DoNothing()
-#                        clock.tick(2000)
+                        self.y+=5
+                        self.TextMessage("I can't go there", self.x, self.y)
+                        pg.time.delay(400)
+                    ## moving up
                     if self.moving_keys[pg.K_DOWN]:
-                        self.TextMessage("I can't go there", self.x, self.y)
+                        self.hitbox.bottom = wall.hitbox.top
                         self.DoNothing()
+                        self.y-=5
+                        self.TextMessage("I can't go there", self.x, self.y)
+                        pg.time.delay(400)
                 
 #                        clock.tick(2000)
 #            draw avatar's hitbox            
@@ -937,6 +955,7 @@ class Player(Avatar):
                 if self.hitboxBody.colliderect(enemy.hitboxBody):
                     self.coins += enemy.coins
                     enemy.coins = 0
+                    
 
                               
 
@@ -1050,7 +1069,7 @@ class Vampire(Avatar):
             self.shootDown = True
             if self.hits < 1000:
                 self.unconsious = True
-            print("dead")
+            
             
         
     def movement(self):
@@ -1210,7 +1229,6 @@ class WereWolf(Avatar):
             self.shootDown = True
             if self.hits < 1000:
                 self.unconsious = True
-            print("dead")
                
         
     def movement(self):
