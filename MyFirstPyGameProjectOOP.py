@@ -6,7 +6,9 @@ This is a temporary script file.
 """
 
 import pygame as pg
-import os, random , time
+#import py2exe
+
+import os, random
 
 
 global red, green, blue, darkBlue, white, black, pink
@@ -347,8 +349,10 @@ Bigger_Back_400_Wer = [pg.transform.scale(im,(400,400)) for im in Back_Wer]
 ###############################################################################
 
 class SceneBase:
-    def __init__(self):
+    def __init__(self, flps = 10):
         self.next = self
+        self.flps = flps
+        self.crashed = False
     
     def ProcessInput(self, events):
         print("uh-oh, you didn't override this in the child class")
@@ -365,86 +369,211 @@ class SceneBase:
     def Terminate(self):
         self.SwitchToScene(None)
 
+                    
         
-class TitleScene(SceneBase):
-    def __init__(self):
-        SceneBase.__init__(self)
+class Introduction(SceneBase):
+    def __init__(self, flps = 10):
+        SceneBase.__init__(self, flps)
+        
+        
+        
     
     def quitScene(self, event):
-        if event[pg.K_RETURN]:
-                # Move to the next scene when the user pressed Enter
-            self.SwitchToScene(TitleScene_2())
-            pg.time.delay(800)
+        if self.playButton.pushed:
+            self.SwitchToScene(GameScene())
+
+        if self.introButton.pushed:
+            self.SwitchToScene(TitleScene())
+            
+        if self.controlsButton.pushed:
+            self.SwitchToScene(Control_Keys())
+            
+        if self.Quit_Button.pushed:
+            self.crashed = True
+        
     
     def Update(self):
         pass
     
     def Render(self, screen):
-        # For the sake of brevity, the title scene is a blank red screen
-        text1 = font.render("Hello!!", True,black)
-        text2 = font.render("This is Giannis,", True,black)
-        text3 = font.render("He wants to buy a diamont ring for his girlfriend.", True,black)
-        text4 = font.render("But he has no money", True,black)
-        screen.fill(HelloScreenColor)
-        texts = ((text1,(100 , 140)),(text2,(100 , 180)),(text3,(100 , 220)),(text4,(100,260)))
-        screen.blits(texts)
         
-        gameDisplay.blit(Bigger_Frond_400[0],(600,100))
+        self.screen = screen
+        self.screen.fill(HelloScreenColor)
+        self.screen.blit(Bigger_Frond_400[0],(600,100))
+        
+        self.welcomefont = pg.font.SysFont("comicsansms", 100)
+        self.text1 = self.welcomefont.render("Wellcome...", True,black)
+        self.screen.blit(self.text1,(50,10))
+        
+        self.playButton = Button("Play...", 450, 240, black)
+        self.introButton = Button("Introduction...", 450, 300,black)
+        self.controlsButton = Button("Key Controls...", 450, 360, black)
+        self.Quit_Button = Button("Quit...", 450, 420, black)
+        
+        self.playButton.DrawButton(screen)
+        self.introButton.DrawButton(screen)
+        self.controlsButton.DrawButton(screen)
+        self.Quit_Button.DrawButton(screen)
+
+        
+class Control_Keys(SceneBase):
+    def __init__(self, flps = 5):
+        SceneBase.__init__(self, flps)
+        
+    
+    def quitScene(self, event):
+        if self.playButton.pushed:
+            self.SwitchToScene(GameScene())
+
+        if self.Back_Button.pushed:
+            self.SwitchToScene(Introduction())
+                  
+    
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        
+        self.screen = screen
+        self.screen.fill(HelloScreenColor)
+        self.screen.blit(Bigger_Frond_400[0],(600,100))
+        
+        self.playButton = Button("Play", 900, 500)
+        self.Back_Button = Button("Back", 50, 500)
+    
+        
+        self.playButton.DrawButton(screen)
+        self.Back_Button.DrawButton(screen)
+        
+        self.text1 = font.render("Right arrow : move right", True,black)
+        self.text2 = font.render("Left arrow : move left", True,black)
+        self.text3 = font.render("Up arrow : move up", True,black)
+        self.text4 = font.render("Down arrow : move down", True,black)
+        self.text5 = font.render("Space : Fire", True,black)
+        self.text6 = font.render("Enter : next scene", True,black)
+        
+        self.texts = ((self.text1,(250,140)),(self.text2,(250,180)),(self.text3,(250,220)),
+                      (self.text4,(250,260)),(self.text5,(250,300)),(self.text6,(250,340)))
+        self.screen.blits(self.texts)
+      
+        
+class TitleScene(SceneBase):
+    def __init__(self, flps = 10):
+        SceneBase.__init__(self, flps)
+    
+    def quitScene(self, event):
+        if event[pg.K_RETURN] or self.Next_Button.pushed:
+           self.SwitchToScene(TitleScene_2())
+         
+        if self.Back_Button.pushed:
+            self.SwitchToScene(Introduction())
+            
+    
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        
+        self.screen = screen
+        self.screen.fill(HelloScreenColor)
+        
+        self.Next_Button = Button("Next", 900, 500)
+        self.Back_Button = Button("Back", 50, 500)
+    
+        self.Next_Button.DrawButton(screen)
+        self.Back_Button.DrawButton(screen)
+        
+
+        self.text1 = font.render("Hello!!", True,black)
+        self.text2 = font.render("This is Giannis,", True,black)
+        self.text3 = font.render("He wants to buy a diamont ring for his girlfriend.", True,black)
+        self.text4 = font.render("But he has no money", True,black)
+        
+        self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),
+                      (self.text3,(100 , 220)),(self.text4,(100,260)))
+        self.screen.blits(self.texts)
+        
+        self.screen.blit(Bigger_Frond_400[0],(600,100))
         
 
 class TitleScene_2(SceneBase):
-    def __init__(self):
-        SceneBase.__init__(self)
+    def __init__(self, flps = 10):
+        SceneBase.__init__(self, flps)
     
     def quitScene(self, event):
-        if event[pg.K_RETURN]:
-            self.SwitchToScene(TitleScene_3())
-            pg.time.delay(800)
+        if event[pg.K_RETURN] or self.Next_Button.pushed:
+           self.SwitchToScene(TitleScene_3())
+         
+        if self.Back_Button.pushed:
+            self.SwitchToScene(TitleScene())
+                
     
     def Update(self):
         pass
     
     def Render(self, screen):
-        # For the sake of brevity, the title scene is a blank red screen
-        text1 = font.render("He also has to cross through", True,black)
-        text2 = font.render("an area full of ", True,black)
-        text3 = font.render("Vampires and Werewolfs.", True,black)
-        screen.fill(HelloScreenColor)
-        texts = ((text1,(100 , 140)),(text2,(100 , 180)),(text3,(100 , 220)))
-        screen.blits(texts)
         
-        gameDisplay.blit(Bigger_Frond_400[0],(600,100))
+        self.screen = screen
+        self.screen.fill(HelloScreenColor)
+        
+        self.Next_Button = Button("Next", 900, 500)
+        self.Back_Button = Button("Back", 50, 500)
+    
+        self.Next_Button.DrawButton(screen)
+        self.Back_Button.DrawButton(screen)
+        
+        self.text1 = font.render("He also has to cross through", True,black)
+        self.text2 = font.render("an area full of ", True,black)
+        self.text3 = font.render("Vampires and Werewolfs.", True,black)
+        
+        self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),(self.text3,(100 , 220)))
+        self.screen.blits(self.texts)
+        
+        self.screen.blit(Bigger_Frond_400[0],(600,100))
         
 class TitleScene_3(SceneBase):
-    def __init__(self):
-        SceneBase.__init__(self)
+    def __init__(self, flps = 10):
+        SceneBase.__init__(self, flps)
     
     def quitScene(self, event):
-        if event[pg.K_RETURN]:
-            self.SwitchToScene(GameScene())
-            pg.time.delay(800)
-    
+        
+        if event[pg.K_RETURN] or self.Play_Button.pushed:
+           self.SwitchToScene(GameScene())
+         
+        if self.Back_Button.pushed:
+            self.SwitchToScene(TitleScene_2())
+
     def Update(self):
         pass
     
     def Render(self, screen):
-        # For the sake of brevity, the title scene is a blank red screen
-        text1 = font.render("Thankfully he has", True,black)
-        text2 = font.render("a powerful stun gun", True,black)
-        text3 = font.render("that can nock them off", True,black)
-        text4 = font.render("for a good amount of time", True,black)
-        screen.fill(HelloScreenColor)
-        texts = ((text1,(100 , 140)),(text2,(100 , 180)),(text3,(100 , 220)),(text4,(100 , 260)))
-        screen.blits(texts)
         
-        gameDisplay.blit(Bigger_Frond_400[0],(600,100))
+        self.screen = screen
+        self.screen.fill(HelloScreenColor)
+        
+        self.Play_Button = Button("Play", 900, 500)
+        self.Back_Button = Button("Back", 50, 500)
+    
+        self.Play_Button.DrawButton(screen)
+        self.Back_Button.DrawButton(screen)
+        
+        self.text1 = font.render("Thankfully he has", True,black)
+        self.text2 = font.render("a powerful stun gun", True,black)
+        self.text3 = font.render("that can nock them off", True,black)
+        self.text4 = font.render("for a good amount of time", True,black)
+       
+        self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),
+                      (self.text3,(100 , 220)),(self.text4,(100 , 260)))
+        self.screen.blits(self.texts)
+        
+        self.screen.blit(Bigger_Frond_400[0],(600,100))
 
 
 
 
 class BeatenScene1(SceneBase):
-    def __init__(self):
-        SceneBase.__init__(self)
+    def __init__(self, flps = 10):
+        SceneBase.__init__(self, flps)
     
     def quitScene(self, event):
         if event[pg.K_RETURN]:
@@ -455,156 +584,66 @@ class BeatenScene1(SceneBase):
     
     def Render(self, screen):
         # For the sake of brevity, the title scene is a blank red screen
-        screen.fill(LoseScreenColor)
+        self.screen = screen
+        self.screen.fill(LoseScreenColor)
         if player.beaten_by_Vampire:
-            text1 = font.render("This Vampire beat you up", True,black)
+            self.text1 = font.render("This Vampire beat you up", True,black)
             if player.coins > 0 :
-                text2 = font.render("and stole all of your money", True,black)
-                texts = (text1,(300 , 240)),(text2,(300 , 280))
-                screen.blits(texts)
+                self.text2 = font.render("and stole all of your money", True,black)
+                self.texts = (self.text1,(300 , 240)),(self.text2,(300 , 280))
+                self.screen.blits(self.texts)
             else:
-                text3 = font.render("And beacause you did not have any monet", True,black)
-                text4 = font.render("he beat you again", True,black)
-                texts = ((text1,(300, 240)),(text3,(300, 280)),(text4,(300 , 320)))
-                screen.blits(texts)
-            gameDisplay.blit(Bigger_Falling_Down_Left_400[8],(600,100))
+                self.text3 = font.render("And beacause you did not have any monet", True,black)
+                self.text4 = font.render("he beat you again", True,black)
+                self.texts = ((self.text1,(300, 240)),(self.text3,(300, 280)),
+                              (self.text4,(300 , 320)))
+                self.screen.blits(self.texts)
+            self.screen.blit(Bigger_Falling_Down_Left_400[8],(600,100))
             
             
         if player.beaten_by_Werewolf:
-            text5 = font.render("This Werewolf beat you up", True,black)
-            text6 = font.render("just for fun. He didn't care for your money", True,black)
-            texts = (text5,(320 , 240)),(text6,(320 , 280))
-            screen.blits(texts)
-            gameDisplay.blit(Bigger_Falling_Down_Left_400[8],(600,100))
+            self.text5 = font.render("This Werewolf beat you up", True,black)
+            self.text6 = font.render("just for fun. He didn't care for your money", True,black)
+            self.texts = (self.text5,(320 , 240)),(self.text6,(320 , 280))
+            self.screen.blits(self.texts)
+            self.screen.blit(Bigger_Falling_Down_Left_400[8],(600,100))
             
             
             
-                
-
-
-#class DeadScene1(SceneBase):
-#    def __init__(self):
-#        SceneBase.__init__(self)
-#    
-#    def quitScene(self, event):
-#        if event[pg.K_RETURN]:
-#            self.SwitchToScene(DeadScene2())
-#            pg.time.delay(800)
-#    def Update(self):
-#        pass
-#    
-#    def Render(self, screen):
-#        # For the sake of brevity, the title scene is a blank red screen
-#        screen.fill(LoseScreenColor )
-#        if player.killed_by_Vampire:
-#            text = font.render("This Vampire suck you dry", True,black)
-#            screen.blit(text,(320 , 240))
-#            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[0],(600,100))
-#            
-#        if player.killed_by_Werewolf:
-#            text = font.render("Your heart has been eaten by this Werewolf", True,black)
-#            screen.blit(text,(220 , 240))
-#            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[1],(600,100))
-#            
-#        
-#        
-#   
-#
-#class DeadScene2(SceneBase):
-#    def __init__(self):
-#        SceneBase.__init__(self)
-#    
-#    def quitScene(self, event):
-#        if event[pg.K_RETURN]:
-#            self.SwitchToScene(DeadScene3())
-#            pg.time.delay(800)
-#    
-#    def Update(self):
-#        pass
-#    
-#    def Render(self, screen):
-#        # For the sake of brevity, the title scene is a blank red screen
-#        screen.fill(LoseScreenColor )
-#        if player.killed_by_Vampire:
-#            text = font.render("There is no more blood in your body", True,black) 
-#            screen.blit(text,(220 , 240))
-#            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[0],(600,100))
-#
-#        if player.killed_by_Werewolf:
-#            text = font.render("You no loger have a heart", True,black)
-#            screen.blit(text,(320 , 240))
-#            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[1],(600,100))
-#            
-#           
-#class DeadScene3(SceneBase):
-#    def __init__(self):
-#        SceneBase.__init__(self)
-#    
-#    def quitScene(self, event):
-#        if event[pg.K_RETURN]:
-#            self.SwitchToScene(DeadScene4())
-#            pg.time.delay(800)
-#            
-#    def Update(self):
-#        pass
-#    
-#    def Render(self, screen):
-#        # For the sake of brevity, the title scene is a blank red screen
-#        screen.fill(LoseScreenColor )
-#        if player.killed_by_Vampire:
-#            text = font.render("Seriously you are dead", True,black)
-#            screen.blit(text,(320 , 240))
-#            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[0],(600,100))
-#
-#        if player.killed_by_Werewolf:
-#            text = font.render("Literarly!! You are dead", True,black)
-#            screen.blit(text,(320 , 240))
-#            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[1],(600,100))
-#            
-#class DeadScene4(SceneBase):
-#    def __init__(self):
-#        SceneBase.__init__(self)
-#    
-#    def quitScene(self, event):
-#        pass
-#    
-#    def Update(self):
-#        pass
-#    
-#    def Render(self, screen):
-#        # For the sake of brevity, the title scene is a blank red screen
-#        screen.fill(LoseScreenColor )
-#        if player.killed_by_Vampire:
-#            text = font.render("I have nothing else to say... Please, restart the game", True,black)
-#            screen.blit(text,(200 , 240))
-#            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[0],(600,100))
-#
-#        if player.killed_by_Werewolf:
-#            text = font.render("YOU ARE DEAD... please restart the game", True,black)
-#            screen.blit(text,(220 , 240))
-#            gameDisplay.blit(Bigger_Giannis_Dead_Left_400[1],(600,100))
-        
 class GameScene(SceneBase):
-    def __init__(self):
-        SceneBase.__init__(self)
+    def __init__(self, flps = 100):
+        SceneBase.__init__(self, flps)
+        
     
     def quitScene(self, event):
-        pass
+        if self.Quit_Button.pushed:
+           self.SwitchToScene(Introduction())
+         
+        if self.Pause_Button.pushed:
+            pass
         
     def Update(self):
         pass
     
     def Render(self, screen):
-        # The game scene is just a blank blue screen 
-                    #Background
-        player.beaten_by_Werewolf = False
-        player.beaten_by_Vampire = False
+        
+        self.screen = screen
         drawBackground()
         
-        message = "You Have " + str(player.coins) + " coins"
-        message_x = screen_width - 14*(len(message))
-        message_y = 40
-        TextMessage(message, message_x, message_y, gold, saddlebrown)
+        self.Pause_Button = Button("Pause", 900, 500, gold)
+        self.Quit_Button = Button("Quit", 50, 500, gold)
+    
+        self.Pause_Button.DrawButton(screen)
+        self.Quit_Button.DrawButton(screen)
+        
+        player.beaten_by_Werewolf = False
+        player.beaten_by_Vampire = False
+       
+        
+        self.message = "You Have " + str(player.coins) + " coins"
+        self.message_x = screen_width - 14*(len(self.message))
+        self.message_y = 40
+        TextMessage(self.screen,self.message,self.message_x, self.message_y, gold, saddlebrown)
             ### Moving the avatar
         player.movement()
         if player.Beaten:
@@ -1152,19 +1191,17 @@ class Vampire(Avatar):
                 self.speed = 0
                 self.uncoinsious = False
 
+            ####################################
+            ###    Checking for Buildings    ###
+            ####################################
+            for building in BuildingsSurface:
+                    if self.hitbox.colliderect(building):
+                        self.jumping = False
+                        self.inside = True
+                    else:
+                        self.inside = False
         else:
             self.speed = 0
-           ################################
-           ###  Checking for Buildings  ###
-           ################################
-                
-            for building in BuildingsSurface:
-                if self.hitbox.colliderect(building):
-                    self.Free_to_move = False
-                    self.WalkCount = 0
-                    self.speed = (-1)*self.speed
-                    self.random = random.randint(0, 10)
-            
             
     def drawAvatar(self, gameDisplay):
         self.movement()
@@ -1173,7 +1210,7 @@ class Vampire(Avatar):
                 #walking image number of frames
         if self.WalkCount+1>27:
             self.WalkCount=0
-        if self.StandingCount + 1 > 100:
+        if self.StandingCount + 1 > 800:
             self.StandingCount = 0
             self.unconsious = False
         if self.speed > 0:
@@ -1309,8 +1346,17 @@ class WereWolf(Avatar):
             if Attacking(self,player):
                 self.speed = 0
 
+            ####################################
+            ###    Checking for Buildings    ###
+            ####################################
+            for building in BuildingsSurface:
+                    if self.hitbox.colliderect(building):
+                        self.jumping = False
+                        self.inside = True
+                    else:
+                        self.inside = False
         else:
-            self.speed = 0                              
+            self.speed = 0                             
 
     
     def drawAvatar(self, gameDisplay):
@@ -1321,7 +1367,7 @@ class WereWolf(Avatar):
                 #walking image number of frames
         if self.WalkCount+1>27:
             self.WalkCount=0
-        if self.StandingCount+1>100:
+        if self.StandingCount+1 > 800:
             self.StandingCount=0
             self.unconsious = False
         if self.speed > 0:
@@ -1527,6 +1573,44 @@ class timeUnit():
         else:
             return False
 
+
+###############################################################################
+#######################            Buttons            #########################
+###############################################################################
+
+class Button():
+    
+    def __init__(self, message, x, y,inactive_color = red, interaction_color = pink):
+        self.x = x
+        self.y = y
+        self.message = message
+        self.interaction_color = interaction_color
+        self.inactive_color = inactive_color
+        self.pushed = False
+        
+        self.mouse_pos= pg.mouse.get_pos()
+        self.click = pg.mouse.get_pressed()
+        
+    def DrawButton(self, screen):
+        
+        self.screen = screen
+        self.text = font.render(self.message, True, self.inactive_color)
+        self.box = pg.Rect(self.x-10,self.y-self.text.get_height(),self.text.get_width()+24,self.text.get_height())
+
+        if self.mouse_pos[0] > self.x and self.mouse_pos[0] < self.x +self.box.width:
+            if  self.mouse_pos[1] > self.y and self.mouse_pos[1] < self.y + self.box.height:
+                self.text = font.render(self.message, True, self.interaction_color)
+                self.screen.blit(self.text, (self.x,self.y))
+                if self.click[0]:
+                    self.pushed = True
+        else:
+            self.pushed = False
+        
+        self.screen.blit(self.text, (self.x,self.y))
+
+   
+    
+
 ###############################################################################
 ###############################################################################
 ######################3###        FUNCTIONS         ###########################
@@ -1701,11 +1785,11 @@ def Action_Inside_Building(player):
 ##################             Text Message             #######################
 ###############################################################################   
 
-def TextMessage(message, x, y,color = black, colorBox = white):
+def TextMessage(screen,message, x, y,color = black, colorBox = white):
     text = font.render(message, True, color)
     box=pg.Rect(x-10,y-text.get_height(),text.get_width()+24,text.get_height())
     pg.draw.rect(gameDisplay, colorBox, box)
-    gameDisplay.blit(text,(x,y-text.get_height()))
+    screen.blit(text,(x,y-text.get_height()))
     pg.display.flip() 
     return text
 
@@ -1839,11 +1923,10 @@ def BeingShoot(enemy, Bullets):
 
 def run_game(starting_scene):
     pg.init()
+    crashed = False
     main()
     active_scene = starting_scene
-    while not quitGame():
-        quitGame()
-        
+    while not crashed:
         key=pg.key.get_pressed()
         
         ShootingBullets(Bullets,player,key)
@@ -1854,9 +1937,10 @@ def run_game(starting_scene):
         pg.display.flip()
         active_scene = active_scene.next
         
-    
+        if quitGame() or active_scene.crashed:
+            crashed = True
      
-        clock.tick(100)
+        clock.tick(active_scene.flps)
     pg.quit()
-run_game(GameScene())
+run_game(Introduction())
 quit()
