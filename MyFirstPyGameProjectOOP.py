@@ -650,7 +650,7 @@ class GameScene(SceneBase):
         self.message_y = 40
         TextMessage(self.screen,self.message,self.message_x, self.message_y, gold, saddlebrown)
             ### Moving the avatar
-        player.movement()
+        player.movement(self.screen)
         if player.Beaten:
             player.Beaten = False
             player.Person_to_Beat_You.x +=300
@@ -850,21 +850,22 @@ class Player(Avatar):
                 self.jumping = False
                 self.jump_step = self.jump_step_max    
     
-    def WaitingSequence(self):
+    def WaitingSequence(self,screen):
+        self.screen = screen
         waiting=10000 # msec
         if self.actionTime.waitingAct(waiting):
             if self.StandingCount+1>7:
                 self.StandingCount=0
             else:
                 #dispalying action
-                gameDisplay.blit(Waving[self.StandingCount],(self.x,self.y))
+                self.screen.blit(Waving[self.StandingCount],(self.x,self.y))
                 self.StandingCount+=1 
         elif self.actionTime.waitingAct(2*waiting):
             if self.StandingCount+1>9:
                 self.StandingCount=0
             else:
                 #dispalying action
-                gameDisplay.blit(Waving_2Hands[self.StandingCount],(self.x,self.y))
+                self.screen.blit(Waving_2Hands[self.StandingCount],(self.x,self.y))
                 self.StandingCount+=1
         elif self.actionTime.waitingAct(3*waiting):
             self.jumping = True
@@ -873,7 +874,7 @@ class Player(Avatar):
             else:
                 self.Jump()
                 #dispalying action
-                gameDisplay.blit(Waving_2Hands[self.StandingCount],(self.x,self.y))
+                self.screen.blit(Waving_2Hands[self.StandingCount],(self.x,self.y))
                 self.StandingCount+=1
                 self.actionTime=timeUnit()
                 
@@ -884,8 +885,9 @@ class Player(Avatar):
             
 
     
-    def movement(self):
+    def movement(self,screen):
         ## Moving Keys
+        self.screen = screen
         self.moving_keys=pg.key.get_pressed()
         self.dying = False
         if self.injured:
@@ -976,29 +978,29 @@ class Player(Avatar):
                         self.hitbox.left = wall.hitbox.right
                         self.DoNothing()
                         self.x -=4
-                        self.TextMessage("I can't go there", self.x, self.y)
-                        pg.time.delay(400)
+                        self.TextMessage(self.screen ,"I can't go there", self.x, self.y)
+                        
                     ## moving right
                     if self.moving_keys[pg.K_LEFT]:
                         self.hitbox.right = wall.hitbox.left
                         self.DoNothing()
                         self.x +=4
-                        self.TextMessage("I can't go there", self.x, self.y)
-                        pg.time.delay(400)
+                        self.TextMessage(self.screen ,"I can't go there", self.x, self.y)
+                       
                     ## moving up
                     if self.moving_keys[pg.K_UP]:
                         self.hitbox.top = wall.hitbox.bottom
                         self.DoNothing()
                         self.y+=5
-                        self.TextMessage("I can't go there", self.x, self.y)
-                        pg.time.delay(400)
+                        self.TextMessage(self.screen ,"I can't go there", self.x, self.y)
+                        
                     ## moving up
                     if self.moving_keys[pg.K_DOWN]:
                         self.hitbox.bottom = wall.hitbox.top
                         self.DoNothing()
                         self.y-=5
-                        self.TextMessage("I can't go there", self.x, self.y)
-                        pg.time.delay(400)
+                        self.TextMessage(self.screen,"I can't go there", self.x, self.y)
+                        
                 
 #                        clock.tick(2000)
 #            draw avatar's hitbox            
@@ -1038,8 +1040,9 @@ class Player(Avatar):
 
                               
 
-    def drawAvatar(self, gameDisplay):
-        Avatar.drawAvatar(self, gameDisplay)
+    def drawAvatar(self, screen):
+        self.screen = screen
+        Avatar.drawAvatar(self, self.screen)
         #walking image number of frames
         if self.x < 100 and self.y < 100:
             self.injured = False
@@ -1053,62 +1056,59 @@ class Player(Avatar):
                 # count time after this action
                 self.actionTime=timeUnit()
                 #dispalying action
-                gameDisplay.blit(Walking_Right[self.WalkCount],(self.x,self.y))
+                self.screen.blit(Walking_Right[self.WalkCount],(self.x,self.y))
                 self.WalkCount+=1
             elif self.left and not self.dying:
                 # count time after this action
                 self.actionTime=timeUnit()
                 #dispalying action
-                gameDisplay.blit(Walking_Left[self.WalkCount],(self.x,self.y))
+                self.screen.blit(Walking_Left[self.WalkCount],(self.x,self.y))
                 self.WalkCount+=1
             elif self.back and not self.dying:
                 # count time after this action
                 self.actionTime=timeUnit()
                 #dispalying action
-                gameDisplay.blit(BackHead[0],(self.x,self.y))    
+                self.screen.blit(BackHead[0],(self.x,self.y))    
             elif self.frond and not self.dying:
                     # count time after this action
                 self.actionTime=timeUnit()
                     #dispalying action
-                gameDisplay.blit(Face[0],(self.x,self.y))
+                self.screen .blit(Face[0],(self.x,self.y))
             elif self.dying:
                 self.actionTime=timeUnit()
-                gameDisplay.blit(Falling_Down_Left[self.DyingCount],(self.x,self.y))
+                self.screen.blit(Falling_Down_Left[self.DyingCount],(self.x,self.y))
                 self.DyingCount += 1
             else:
-                self.WaitingSequence()
+                self.WaitingSequence(self.screen)
         if self.injured:
             if self.right and not self.dying:
                 # count time after this action
                 self.actionTime=timeUnit()
                 #dispalying action
-                gameDisplay.blit(Walking_Right_Beaten[self.WalkCount],(self.x,self.y))
+                self.screen.blit(Walking_Right_Beaten[self.WalkCount],(self.x,self.y))
                 self.WalkCount+=1
             elif self.left and not self.dying:
                 # count time after this action
                 self.actionTime=timeUnit()
                 #dispalying action
-                gameDisplay.blit(Walking_Left_Beaten[self.WalkCount],(self.x,self.y))
+                self.screen.blit(Walking_Left_Beaten[self.WalkCount],(self.x,self.y))
                 self.WalkCount+=1
             elif self.back and not self.dying:
                 # count time after this action
                 self.actionTime=timeUnit()
                 #dispalying action
-                gameDisplay.blit(BackHead_Beaten[0],(self.x,self.y))    
-            elif self.frond and not self.dying:
+                self.screen.blit(BackHead_Beaten[0],(self.x,self.y))    
+            elif (self.frond  or self.stand) and not self.dying:
                     # count time after this action
                 self.actionTime=timeUnit()
                     #dispalying action
-                gameDisplay.blit(Face_Beaten[0],(self.x,self.y))
+                self.screen.blit(Face_Beaten[0],(self.x,self.y))
             elif self.dying:
                 self.actionTime=timeUnit()
-                gameDisplay.blit(Falling_Down_Left[self.DyingCount],(self.x,self.y))
+                self.screen.blit(Falling_Down_Left[self.DyingCount],(self.x,self.y))
                 self.DyingCount += 1
-            else:
-                                    # count time after this action
-                self.actionTime=timeUnit()
-                    #dispalying action
-                gameDisplay.blit(Face_Beaten[0],(self.x,self.y))
+            else:                                   
+               self.screen.blit(Face_Beaten[0],(self.x,self.y))
                 
            
                  
@@ -1116,15 +1116,20 @@ class Player(Avatar):
 #        self.hitbox=(self.x+4, self.y, 20, 32)
 #        pg.draw.rect(gameDisplay,black, self.hitbox,2)
                 
-    def TextMessage(self, message, x, y,color = black):
+    def TextMessage(self,screen, message, x, y,color = black):
+        self.screen = screen
         self.message = message
         self.color = color
+        if self.injured:
+            self.screen.blit(Face_Beaten[0],(self.x,self.y))
+        else:
+            self.screen.blit(Face[0],(self.x,self.y))
         self.text = font.render(self.message, True, self.color)
         self.box=pg.Rect(self.x, self.y-self.text.get_height(),self.text.get_width(),self.text.get_height())
-        pg.draw.rect(gameDisplay, white, self.box)
-        gameDisplay.blit(self.text,(x,y-self.text.get_height()))
-        gameDisplay.blit(Face[0],(self.x,self.y))
-        pg.display.flip()
+        pg.draw.rect(self.screen, white, self.box)
+        self.screen.blit(self.text,(x,y-self.text.get_height()))
+        
+
 
         
 ###############################################################################
@@ -1539,7 +1544,7 @@ class Building(pg.Rect):
         self.buildingWalls=[]
         
         paintingBuilding=pg.Rect(x_begin-10, y_begin, self.width+20, self.height+10)
-        pg.draw.rect(gameDisplay, red,  paintingBuilding)
+#        pg.draw.rect(gameDisplay, red,  paintingBuilding)
         BuildingsSurface.append(paintingBuilding)
         
         
@@ -1848,7 +1853,7 @@ def Action_Inside_Building(player):
 def TextMessage(screen,message, x, y,color = black, colorBox = white):
     text = font.render(message, True, color)
     box=pg.Rect(x-10,y-text.get_height(),text.get_width()+24,text.get_height())
-    pg.draw.rect(gameDisplay, colorBox, box)
+    pg.draw.rect(screen, colorBox, box)
     screen.blit(text,(x,y-text.get_height()))
     pg.display.flip() 
     return text
@@ -2020,5 +2025,5 @@ def run_game(starting_scene):
      
         clock.tick(active_scene.flps)
     pg.quit()
-run_game(CongratsScene())
+run_game(GameScene())
 quit()
