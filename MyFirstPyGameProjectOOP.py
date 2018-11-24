@@ -5,13 +5,13 @@ This is a temporary script file.
 """
 
 import pygame as pg
-import py2exe,cx_Freeze
 import os, random
 
+pg.init()
 
 global red, green, blue, darkBlue, white, black, pink
 ###Screen Resolution/Game Surface
-global screen_width, screen_height
+global screen_width, screen_height, music_playing
 
 screen_width=1000 
 screen_height=550
@@ -47,6 +47,26 @@ Vamps = []
 Werewolfs = []
 VampsANDWerewolfs = []
 
+###############################################################################
+#################           Sounds and Mysic         ##########################
+##############################################################################
+
+pg.mixer.music.load("Music_Sounds\Dungeon_Boss.ogg")
+#pg.mixer.music.load("Music_Sounds\Dungeon_Level.ogg")
+
+
+
+
+
+
+pg.mixer.music.play(-1)
+
+music_playing = True
+
+shootingSound = pg.mixer.Sound("Music_Sounds\Shoot3.wav")
+#shootingSound = pg.mixer.Sound("Music_Sounds\Shoot5.wav")
+
+pg.mixer.music.set_volume(0.35)
 ###############################################################################
 #################           Buildings Images         ##########################
 ###############################################################################
@@ -102,7 +122,7 @@ Waving_images_folder_path=os.path.join(image_path,"GiannisWaving")
 Waving_images_path=[os.path.join(Waving_images_folder_path,i+".png") for i in Waving_images]
 Waving=[pg.image.load(i) for i in Waving_images_path]
 
-Bigger_Waving_400 = [pg.transform.scale(im,(400,400)) for im in Waving]
+Bigger_Waving_300 = [pg.transform.scale(im,(300,300)) for im in Waving]
 ## Two Hand
 Waving_2Hands_images=["sprite_GiannisWavingBothHAnds0",
                        "sprite_GiannisWavingBothHAnds1",
@@ -162,17 +182,6 @@ Falling_Down_Right=[pg.transform.flip(i,True,False) for i in Falling_Down_Left]
 
 Bigger_Falling_Down_Left_400 = [pg.transform.scale(im,(400,400)) for im in Falling_Down_Left]
 Bigger_Falling_Down_Right_400 = [pg.transform.scale(im,(400,400)) for im in Falling_Down_Right]
-
-
-Dead_Images = ["sprite_Giannis_Vampire_Kill" , "sprite_Giannis_Werewolf_Kill"]
-
-Dead_Images_path=[os.path.join(image_path,i+".png") for i in Dead_Images]
-
-Giannis_Dead_Left = [pg.image.load(i) for i in Dead_Images_path] 
-Giannis_Dead_Right = [pg.transform.flip(i,True,False) for i in Giannis_Dead_Left] 
-
-Bigger_Giannis_Dead_Left_400 = [pg.transform.scale(im,(400,400)) for im in Giannis_Dead_Left ]
-Bigger_Giannis_Dead_Right_400 = [pg.transform.scale(im,(400,400)) for im in Giannis_Dead_Right]
 
 
 ############## BEATEN ######################
@@ -246,6 +255,8 @@ Right_images_path_Vamp=[os.path.join(Walking_images_path_Vamp,i+".png") for i in
 Walking_Right_Vamp=[pg.image.load(i) for i in Right_images_path_Vamp]
 Walking_Left_Vamp=[pg.transform.flip(i,True,False) for i in Walking_Right_Vamp]
 
+Bigger_Walking_Left_Vamp_100 =[pg.transform.scale(im,(100,100)) for im in Walking_Right_Vamp]
+Bigger_Walking_Right_Vamp_100 =[pg.transform.scale(im,(100,100)) for im in Walking_Left_Vamp]
 #Falling
 Falling_images_Vamp=["sprite_Vampire_Falling0","sprite_Vampire_Falling1",
                    "sprite_Vampire_Falling2","sprite_Vampire_Falling3",
@@ -307,6 +318,9 @@ Right_images_path_Wer=[os.path.join(Walking_images_path_Wer,i+".png") for i in R
 
 Walking_Right_Wer=[pg.image.load(i) for i in Right_images_path_Wer]
 Walking_Left_Wer=[pg.transform.flip(i,True,False) for i in Walking_Right_Wer]
+
+Bigger_Walking_Left_Wer_100 =[pg.transform.scale(im,(100,100)) for im in Walking_Right_Wer]
+Bigger_Walking_Right_Wer_100 =[pg.transform.scale(im,(100,100)) for im in Walking_Left_Wer]
 
 #Falling
 Falling_images_Wer=["sprite_WereWolf_Falling0","sprite_WereWolf_Falling1",
@@ -380,11 +394,13 @@ class SceneBase:
 class Introduction(SceneBase):
     def __init__(self, player,flps = 10):
         SceneBase.__init__(self, player,flps)
+        self.music_playing = True
         
         
         
     
     def quitScene(self):
+
         if self.playButton.pushed:
             self.SwitchToScene(GameScene(self.player))
 
@@ -393,6 +409,14 @@ class Introduction(SceneBase):
             
         if self.controlsButton.pushed:
             self.SwitchToScene(Control_Keys(self.player))
+         
+        if self.Sound_Button.pushed:
+            if self.music_playing:
+                pg.mixer.music.pause()
+                self.music_playing = False
+            else:
+                pg.mixer.music.unpause()
+                self.music_playing = True
             
         if self.Quit_Button.pushed:
             self.crashed = True
@@ -411,28 +435,30 @@ class Introduction(SceneBase):
         self.text1 = self.welcomefont.render("Wellcome...", True,black)
         self.screen.blit(self.text1,(50,10))
         
-        self.playButton = Button("Play...", 450, 240, black)
-        self.introButton = Button("Introduction...", 450, 300,black)
-        self.controlsButton = Button("Key Controls...", 450, 360, black)
-        self.Quit_Button = Button("Quit...", 450, 420, black)
+        self.playButton = Button("Play...", 450, 180, black)
+        self.introButton = Button("Introduction...", 450, 240,black)
+        self.Sound_Button = Button("Sound", 450, 300, black)
+        self.controlsButton = Button("Control Keys...", 450, 360, black)
+        self.Quit_Button = Button("Quit", 450, 420, black)
         
-        self.playButton.DrawButton(screen)
-        self.introButton.DrawButton(screen)
-        self.controlsButton.DrawButton(screen)
-        self.Quit_Button.DrawButton(screen)
+        self.playButton.DrawButton(self.screen)
+        self.introButton.DrawButton(self.screen)
+        self.Sound_Button.DrawButton(self.screen)
+        self.controlsButton.DrawButton(self.screen)
+        self.Quit_Button.DrawButton(self.screen)
 
         
 class Control_Keys(SceneBase):
-    def __init__(self,player, flps = 5):
+    def __init__(self,player, flps = 10):
         SceneBase.__init__(self,player, flps)
         
     
     def quitScene(self):
-        if self.playButton.pushed:
-            self.SwitchToScene(GameScene())
+        if self.Play_Button.pushed:
+            self.SwitchToScene(GameScene(self.player))
 
         if self.Back_Button.pushed:
-            self.SwitchToScene(Introduction())
+            self.SwitchToScene(Introduction(self.player))
                   
     
     def Update(self):
@@ -444,12 +470,12 @@ class Control_Keys(SceneBase):
         self.screen.fill(HelloScreenColor)
         self.screen.blit(Bigger_Frond_400[0],(600,100))
         
-        self.playButton = Button("Play", 900, 500)
+        self.Play_Button = Button("Play", 900, 500)
         self.Back_Button = Button("Back", 50, 500)
     
         
-        self.playButton.DrawButton(screen)
-        self.Back_Button.DrawButton(screen)
+        self.Play_Button.DrawButton(self.screen)
+        self.Back_Button.DrawButton(self.screen)
         
         self.text1 = font.render("Right arrow : move right", True,black)
         self.text2 = font.render("Left arrow : move left", True,black)
@@ -461,7 +487,8 @@ class Control_Keys(SceneBase):
         self.texts = ((self.text1,(250,140)),(self.text2,(250,180)),(self.text3,(250,220)),
                       (self.text4,(250,260)),(self.text5,(250,300)),(self.text6,(250,340)))
         self.screen.blits(self.texts)
-      
+
+
         
 class TitleScene(SceneBase):
     def __init__(self, player,flps = 10):
@@ -487,20 +514,26 @@ class TitleScene(SceneBase):
         self.Next_Button = Button("Next", 900, 500)
         self.Back_Button = Button("Back", 50, 500)
     
-        self.Next_Button.DrawButton(screen)
-        self.Back_Button.DrawButton(screen)
+        self.Next_Button.DrawButton(self.screen)
+        self.Back_Button.DrawButton(self.screen)
         
-
+        self.font = pg.font.SysFont("comicsansms", 20)
         self.text1 = font.render("Hello!!", True,black)
-        self.text2 = font.render("This is Giannis,", True,black)
-        self.text3 = font.render("He wants to buy a diamont ring for his girlfriend.", True,black)
-        self.text4 = font.render("But he has no money", True,black)
+        self.text2 = self.font.render("This is Giannis. Giannis leaves in a non rotating planet. In a Galaxy far far away...", True,black)
+        self.text3 = self.font.render("Once inhabited by humans but not anymore.", True,black)
+        self.text4 = self.font.render("On this planet there are now two dominaned speaces...", True,black)
+        self.text5 = self.font.render("Vampires and Werewolfs.", True,black)
+        self.text6 = self.font.render("After millennial of war between them they finally reach a peaceful", True,black)
+        self.text7 = self.font.render("coexistence. The areas of the planet that are neither day", True,black)
+        self.text8 = self.font.render("nor night are inhabited by both species.", True,black)
         
-        self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),
-                      (self.text3,(100 , 220)),(self.text4,(100,260)))
+        self.texts = ((self.text1,(80 , 100)),(self.text2,(80 , 160)),
+                      (self.text3,(80 , 190)),(self.text4,(80 , 220)),
+                      (self.text5,(80 , 250)),(self.text6,(80 , 280)),
+                      (self.text7,(80 , 310)),(self.text8,(80 , 340)))
         self.screen.blits(self.texts)
         
-        self.screen.blit(Bigger_Frond_400[0],(600,100))
+        self.screen.blit(Bigger_Frond_400[0],(700,100))
         
 
 class TitleScene_2(SceneBase):
@@ -527,17 +560,25 @@ class TitleScene_2(SceneBase):
         self.Next_Button = Button("Next", 900, 500)
         self.Back_Button = Button("Back", 50, 500)
     
-        self.Next_Button.DrawButton(screen)
-        self.Back_Button.DrawButton(screen)
+        self.Next_Button.DrawButton(self.screen)
+        self.Back_Button.DrawButton(self.screen)
         
-        self.text1 = font.render("He also has to cross through", True,black)
-        self.text2 = font.render("an area full of ", True,black)
-        self.text3 = font.render("Vampires and Werewolfs.", True,black)
+        self.font = pg.font.SysFont("comicsansms", 20)
+        self.text2 = self.font.render("The called those areas the 'Peace and Friendship' zones", True,black)
+        self.text3 = self.font.render("Some hundreds years after their establishment", True,black)
+        self.text4 = self.font.render("Their local government went a step further and invested to biological", True,black)
+        self.text5 = self.font.render("experiments for creating a mix race species.", True,black)
+        self.text6 = self.font.render("The optimists said that the goal was the complete union", True,black)
+        self.text7 = self.font.render("The others that they were trying to build the perfect soldier to", True,black)
+        self.text8 = self.font.render("conquer the rest of the world. Very few know the truth.", True,black)
         
-        self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),(self.text3,(100 , 220)))
+        self.texts = ((self.text2,(80 , 160)),
+                      (self.text3,(80 , 190)),(self.text4,(80 , 220)),
+                      (self.text5,(80 , 250)),(self.text6,(80 , 280)),
+                      (self.text7,(80 , 310)),(self.text8,(80 , 340)))
         self.screen.blits(self.texts)
         
-        self.screen.blit(Bigger_Frond_400[0],(600,100))
+        self.screen.blit(Bigger_Frond_400[0],(700,100))
         
 class TitleScene_3(SceneBase):
     def __init__(self, player,flps = 10):
@@ -545,8 +586,8 @@ class TitleScene_3(SceneBase):
     
     def quitScene(self):
         self.event=pg.key.get_pressed()
-        if self.event[pg.K_RETURN] or self.Play_Button.pushed:
-           self.SwitchToScene(GameScene(self.player))
+        if self.event[pg.K_RETURN] or self.Next_Button.pushed:
+           self.SwitchToScene(TitleScene_4(self.player))
          
         if self.Back_Button.pushed:
             self.SwitchToScene(TitleScene_2(self.player))
@@ -559,24 +600,115 @@ class TitleScene_3(SceneBase):
         self.screen = screen
         self.screen.fill(HelloScreenColor)
         
-        self.Play_Button = Button("Play", 900, 500)
+        self.Next_Button = Button("Next", 900, 500)
         self.Back_Button = Button("Back", 50, 500)
     
-        self.Play_Button.DrawButton(screen)
-        self.Back_Button.DrawButton(screen)
+        self.Next_Button.DrawButton(self.screen)
+        self.Back_Button.DrawButton(self.screen)
         
-        self.text1 = font.render("Thankfully he has", True,black)
-        self.text2 = font.render("a powerful stun gun", True,black)
-        self.text3 = font.render("that can nock them off", True,black)
-        self.text4 = font.render("for a good amount of time", True,black)
-       
-        self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),
-                      (self.text3,(100 , 220)),(self.text4,(100 , 260)))
+        self.font = pg.font.SysFont("comicsansms", 20)
+        self.text2 = self.font.render("What everybody know is that Giannis is the first successful", True,black)
+        self.text3 = self.font.render("'product' of those experiments.", True,black)
+        self.text4 = self.font.render("His parents seeking for the easy money donate their genetic material.", True,black)
+        self.text5 = self.font.render("The excitement of the success had the scientist focusing on making more", True,black)
+        self.text6 = self.font.render("The official announcement said that the child was faster than both species", True,black)
+        self.text7 = self.font.render("but luck in strength and he could feed both with meat and blood.", True,black)
+        
+        
+        self.texts = ((self.text2,(80 , 160)),
+                      (self.text3,(80 , 190)),(self.text4,(80 , 220)),
+                      (self.text5,(80 , 250)),(self.text6,(80 , 280)),
+                      (self.text7,(80 , 310)))
         self.screen.blits(self.texts)
         
-        self.screen.blit(Bigger_Frond_400[0],(600,100))
+        self.screen.blit(Bigger_Frond_400[0],(700,100))
 
 
+class TitleScene_4(SceneBase):
+    def __init__(self,player,flps = 10):
+        SceneBase.__init__(self,player, flps)
+    
+    def quitScene(self):
+        self.event=pg.key.get_pressed()
+        if self.event[pg.K_RETURN] or self.Next_Button.pushed:
+           self.SwitchToScene(TitleScene_5(self.player))
+         
+        if self.Back_Button.pushed:
+            self.SwitchToScene(TitleScene_3(self.player))
+                
+    
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        
+        self.screen = screen
+        self.screen.fill(HelloScreenColor)
+        
+        self.Next_Button = Button("Next", 900, 500)
+        self.Back_Button = Button("Back", 50, 500)
+    
+        self.Next_Button.DrawButton(self.screen)
+        self.Back_Button.DrawButton(self.screen)
+        
+        self.font = pg.font.SysFont("comicsansms", 20)
+        self.text2 = self.font.render("We do not really know much about his childhood", True,black)
+        self.text3 = self.font.render("but we are certain that no one cared for the moral growth", True,black)
+        self.text4 = self.font.render("of the child. He received basic education, mostly because", True,black)
+        self.text5 = self.font.render("the activists made a fuss about it.", True,black)
+        self.text6 = self.font.render("After reaching adulthood he was sent away with a few coins.", True,black)
+        self.text7 = self.font.render("he is currently living somewhere in the Peace and Friendship Zone", True,black)
+        self.text8 = font.render("And Generally he is to lazy to work", True,black)
+        
+        self.texts = ((self.text2,(80 , 160)),
+                      (self.text3,(80 , 190)),(self.text4,(80 , 220)),
+                      (self.text5,(80 , 250)),(self.text6,(80 , 280)),
+                      (self.text7,(80 , 310)),(self.text8,(80 , 340)))
+        self.screen.blits(self.texts)
+        
+        self.screen.blit(Bigger_Frond_400[0],(700,100))
+        
+
+class TitleScene_5(SceneBase):
+    def __init__(self,player,flps = 10):
+        SceneBase.__init__(self,player, flps)
+    
+    def quitScene(self):
+        self.event=pg.key.get_pressed()
+        if self.event[pg.K_RETURN] or self.Play_Button.pushed:
+           self.SwitchToScene(GameScene(self.player))
+         
+        if self.Back_Button.pushed:
+            self.SwitchToScene(TitleScene_3(self.player))
+                
+    
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        
+        self.screen = screen
+        self.screen.fill(HelloScreenColor)
+        
+        self.Play_Button = Button("Play", 900, 50, gold)
+        self.Back_Button = Button("Back", 50, 50, gold)
+    
+        self.Play_Button.DrawButton(self.screen)
+        self.Back_Button.DrawButton(self.screen)
+        
+        self.font = pg.font.SysFont("comicsansms", 20)
+        self.text2 = font.render("And he has a stun-Gun", True,black)
+        self.text3 = self.font.render("(How he came to possess a bio-lock high technology weapon", True,black)
+        self.text4 = self.font.render("is a very interesting story", True,black)
+        self.text5 = self.font.render("for another time)", True,black)
+        
+        self.texts = ((self.text2,(100 , 160)),
+                      (self.text3,(80 , 250)),(self.text4,(80 , 280)),
+                      (self.text5,(80 , 310)))
+        self.screen.blits(self.texts)
+        
+        self.screen.blit(Bigger_Frond_400[0],(700,100))
+        
 
 
 class BeatenScene1(SceneBase):
@@ -625,11 +757,11 @@ class GameScene(SceneBase):
         
     
     def quitScene(self):
-        if self.Quit_Button.pushed:
+        if self.Menu_Button.pushed:
            self.SwitchToScene(Introduction(self.player))
          
         if self.Pause_Button.pushed:
-            pass
+            self.SwitchToScene(PauseScene(self.player))
         
     def Update(self):
         pass
@@ -640,10 +772,10 @@ class GameScene(SceneBase):
         drawBackground()
         
         self.Pause_Button = Button("Pause", 900, 500, gold)
-        self.Quit_Button = Button("Quit", 50, 500, gold)
+        self.Menu_Button = Button("Menu", 50, 500, gold)
     
-        self.Pause_Button.DrawButton(screen)
-        self.Quit_Button.DrawButton(screen)
+        self.Pause_Button.DrawButton(self.screen)
+        self.Menu_Button.DrawButton(self.screen)
         
         self.player.beaten_by_Werewolf = False
         self.player.beaten_by_Vampire = False
@@ -663,19 +795,65 @@ class GameScene(SceneBase):
             self.player.Beaten = False
             self.SwitchToScene(BeatenScene1(self.player))
        
-        if self.player.coins > 200:
+        if self.player.total_stolen_coins > 5000:
             self.SwitchToScene(CongratsScene(self.player))
 
         #Vamps and Werewolfs external lists
         redrawGameWindow(self.screen, self.player, Vamps, Werewolfs)
 
+class PauseScene(SceneBase):
+    def __init__(self,player, flps = 10):
+        SceneBase.__init__(self,player, flps)
+        
+    
+    def quitScene(self):
+        if self.Play_Button.pushed:
+            self.SwitchToScene(GameScene(self.player))
+            
+        if self.Quit_Button.pushed:
+            self.SwitchToScene(Introduction(self.player))
+
+    def Update(self):
+        pass
+    
+    def Render(self, screen):
+        
+        self.screen = screen
+        self.screen.fill(HelloScreenColor)
+
+        self.screen.blit(Bigger_Waving_300[3],(0,200))
+        self.screen.blit(Bigger_Walking_Left_Wer_100[18],(200,390))
+        self.screen.blit(Bigger_Walking_Right_Vamp_100[0],(300,390))
+        self.screen.blit(Bigger_Walking_Left_Wer_100[1],(400,390))
+        self.screen.blit(Bigger_Walking_Right_Vamp_100[15],(500,390))
+        self.screen.blit(Bigger_Walking_Left_Vamp_100[25],(700,390))
+        self.screen.blit(Bigger_Walking_Right_Wer_100[11],(900,390))
+        
+        
+        
+
+        
+        self.welcomefont = pg.font.SysFont("comicsansms", 100)
+        self.text1 = self.welcomefont.render("Game Paused", True,black)
+        self.screen.blit(self.text1,(200,150))
+        
+        self.Play_Button = Button("Play", 900, 50, gold)
+        self.Quit_Button = Button("Quit", 50, 50, gold)
+    
+        
+        self.Play_Button.DrawButton(self.screen)
+        self.Quit_Button.DrawButton(self.screen)
+        
+            
+
+
 class CongratsScene(SceneBase):
     def __init__(self,player, flps = 10):
         SceneBase.__init__(self, player,flps)
     
-    def quitScene(self, event):
+    def quitScene(self):
         if self.Restart_Button.pushed:
-            self.SwitchToScene(Introduction())
+            self.SwitchToScene(Introduction(self.player))
             
         if self.Quit_Button.pushed:
             self.crashed = True
@@ -691,19 +869,27 @@ class CongratsScene(SceneBase):
         self.Restart_Button = Button("New Game", 850, 500, gold)
         self.Quit_Button = Button("Quit", 50, 500, gold)
     
-        self.Restart_Button.DrawButton(screen)
-        self.Quit_Button.DrawButton(screen)
+        self.Restart_Button.DrawButton(self.screen)
+        self.Quit_Button.DrawButton(self.screen)
         
-        
+        self.welcomefont = pg.font.SysFont("comicsansms", 50)
+        self.text1 = self.welcomefont.render("Game Ended", True,black)
+        self.screen.blit(self.text1,(350,20))
         # For the sake of brevity, the title scene is a blank red screen
-        self.text1 = font.render("Congratulations", True,black)
-        self.text2 = font.render("You manage to stole", True,black)
-        self.text4 = font.render(str(player.coins) + " coins", True, black)
+        self.text1 = font.render("Congratulations!!!!!!!!!!!", True,black)
+        self.text2 = font.render("on your ability to steal.......", True,black)
+        self.text3 = font.render("Unfortunatly your total loot is", True,black)
+        self.text4 = font.render(str(player.total_stolen_coins) + " coins", True, black)
+        self.text5 = font.render("And that was much more that they can tolerate", True,black)
+        self.text6 = font.render("You end up in the hospital", True,black)
         
-        self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),(self.text4,(100,260)))
+        
+        self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),
+                      (self.text3,(100 , 260)),(self.text4,(120 , 300)),
+                      (self.text5,(100 , 340)),(self.text6,(100 , 380)))
         self.screen.blits(self.texts)
         
-        self.screen.blit(Bigger_Frond_400[0],(600,100))
+        self.screen.blit(Bigger_Walking_Right_Beaten_400[0],(600,100))
 ###############################################################################
 ###############################################################################
 #######################            AVATARS           ##########################
@@ -722,8 +908,6 @@ class Avatar(object):
         #Avatar's size
         self.width = width
         self.height = height
-        #Avatar's speed
-        self.speed = 2
         #Avatar's jumping parameters
         self.jumping = False
         self.jump_step_max = 8
@@ -837,6 +1021,7 @@ class Player(Avatar):
         self.beaten_by_Werewolf = False 
         self.coins = 0
         self.injured = False
+        self.total_stolen_coins = 0
 
  
     def WaitingSequence(self,screen):
@@ -856,17 +1041,7 @@ class Player(Avatar):
                 #dispalying action
                 self.screen.blit(Waving_2Hands[self.StandingCount],(self.x,self.y))
                 self.StandingCount+=1
-        elif self.actionTime.waitingAct(3*waiting):
-            self.jumping = True
-            if self.StandingCount+1>9:
-                self.StandingCount=0
-            else:
-                self.Jump()
-                #dispalying action
-                self.screen.blit(Waving_2Hands[self.StandingCount],(self.x,self.y))
-                self.StandingCount+=1
-                self.actionTime=timeUnit()
-                
+               
                                             
         else:
             #dispalying action
@@ -1017,6 +1192,7 @@ class Player(Avatar):
                         self.dying = True
                         self.Person_to_Beat_You = enemy
                         self.injured = True
+                        enemy.Free_to_move = True
                         if enemy in Vamps:
                             enemy.coins += self.coins
                             self.coins = 0
@@ -1028,10 +1204,10 @@ class Player(Avatar):
             else: 
                 if self.hitboxBody.colliderect(enemy.hitboxBody):
                     self.coins += enemy.coins
+                    self.total_stolen_coins += enemy.coins
                     enemy.coins = 0
         if self.Beaten:
             self.Person_to_Beat_You.x +=300
-            self.Person_to_Beat_You.speed =2
             self.Person_to_Beat_You.attacking = False
                                                
 
@@ -1039,7 +1215,7 @@ class Player(Avatar):
         self.screen = screen
         Avatar.drawAvatar(self, self.screen)
         #walking image number of frames
-        if self.x < 100 and self.y < 100:
+        if self.x < 120 and self.y < 50:
             self.injured = False
         if self.WalkCount + 1 > 31:
             self.WalkCount = 0
@@ -1135,7 +1311,7 @@ class PeopleThatDislikePlayer(Avatar):
             
     def __init__(self, x, y, width, height, x_end , y_end,Buildings):
         Avatar.__init__(self, x, y, width, height)
-        self.speed = 0.5
+        self.speed = 0.4
         self.x_end = x_end
         self.y_end = y_end
         self.path_x = [self.x, self.x_end]
@@ -1152,12 +1328,11 @@ class PeopleThatDislikePlayer(Avatar):
             self.hits = 0
             self.WalkCount = 0
             self.shootDown = True
-            if self.hits < 1000:
+            if self.hits < 800:
                 self.unconsious = True
             
     def MoneyMoneyMoney(self):
-        if self.unconsious == True:
-            self.coins = random.randint(50, 200)          
+        pass         
                 
     def Attacking(self, player):
         self.player = player
@@ -1166,6 +1341,7 @@ class PeopleThatDislikePlayer(Avatar):
         self.y = self.player.y
         self.speed = 0
         self.player.speed = 0
+        self.Free_to_move = False
         
     def drawAvatar(self, screen):
          pass
@@ -1177,6 +1353,7 @@ class PeopleThatDislikePlayer(Avatar):
             self.Free_to_move = False
         else:
             self.Free_to_move = True
+            
       
         if self.Free_to_move == True:
             if self.speed > 0:
@@ -1186,9 +1363,6 @@ class PeopleThatDislikePlayer(Avatar):
                         self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
                         self.AttackingBox = pg.Rect((self.x+4), self.y-32, 100, 100)
                         self.DoRight()
-#                        Attacking(self, player)
-                        
-
                     else:
                         self.speed = (-1)*self.speed
                         self.WalkCount = 0
@@ -1196,17 +1370,12 @@ class PeopleThatDislikePlayer(Avatar):
                         self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
                         self.AttackingBox = pg.Rect((self.x-74), self.y-32, 100, 100)
                         self.DoLeft()
-#                        Attacking(self, player)
-                        
-
                 else:
                      if (self.y +self.speed) < self.path_y[1]:
                         self.y += self.speed
                         self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
                         self.AttackingBox = pg.Rect((self.x-32), self.y, 92, 92)
-                        self.DoFace()
-#                        Attacking(self, player)
-                        
+                        self.DoFace()   
                      else:
                         self.speed = (-1)*self.speed
                         self.WalkCount = 0
@@ -1214,7 +1383,6 @@ class PeopleThatDislikePlayer(Avatar):
                         self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
                         self.AttackingBox = pg.Rect((self.x-32), self.y-55, 92, 92)
                         self.DoBack()
-#                        Attacking(self, player)
             else:
                 if self.random < 5:
                     if  (self.x +self.speed) > self.path_x[0] :
@@ -1222,7 +1390,6 @@ class PeopleThatDislikePlayer(Avatar):
                         self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
                         self.AttackingBox = pg.Rect((self.x-74), self.y-32, 100, 100)
                         self.DoLeft()
-#                        Attacking(self, player)
                     else:
                         self.speed = (-1)*self.speed
                         self.WalkCount = 0
@@ -1230,7 +1397,7 @@ class PeopleThatDislikePlayer(Avatar):
                         self.hitboxBody=pg.Rect((self.x+4), self.y, 20, 32)
                         self.AttackingBox = pg.Rect((self.x-54), self.y-32, 100, 100)
                         self.DoRight()
-#                        Attacking(self, player)
+
                 else:
                      if (self.y + self.speed) > self.path_y[0]:
                         self.y += self.speed
@@ -1266,6 +1433,10 @@ class Vampire(PeopleThatDislikePlayer):
 
     def __init__(self, x, y, width, height, x_end , y_end,Buildings):
         PeopleThatDislikePlayer.__init__(self, x, y, width, height, x_end , y_end,Buildings)
+    
+    def MoneyMoneyMoney(self):
+        if not self.unconsious:
+            self.coins = random.randint(50, 200) 
     
     def drawAvatar(self, screen):
         self.screen = screen
@@ -1313,6 +1484,10 @@ class WereWolf(PeopleThatDislikePlayer):
 
     def __init__(self, x, y, width, height, x_end , y_end,Buildings):
         PeopleThatDislikePlayer.__init__(self, x, y, width, height, x_end , y_end,Buildings)
+    
+    def MoneyMoneyMoney(self):
+        if  not self.unconsious:
+            self.coins = random.randint(5, 70) 
     
     def drawAvatar(self, screen):
         self.screen = screen
@@ -1427,7 +1602,7 @@ class Building(pg.Rect):
         self.buildingWalls=[]
         
         self.paintingBuilding=pg.Rect(self.x_begin-10, self.y_begin, self.width+20, self.height+10)
-        pg.draw.rect(gameDisplay, red,  self.paintingBuilding)
+#        pg.draw.rect(gameDisplay, red,  self.paintingBuilding)
         # append to an external list
         BuildingsSurface.append(self.paintingBuilding)
         
@@ -1679,8 +1854,10 @@ def quitGame(crashed=False):
 def Attacking(enemy, player, waiting = 100, attacking = False):
     enemy.player = player
     if enemy.AttackingBox.colliderect(player.hitboxBody):
-        enemy.x = player.x
-        enemy.y = player.y
+        enemy.x = enemy.player.x
+        enemy.y = enemy.player.y
+        enemy.speed = 0
+        enemy,player = 0
         attacking = True
     return attacking
 
@@ -1806,7 +1983,7 @@ player = Player(50,50,32,32)
 
 
 
-number_of_Vamps = random.randint(5,10)
+number_of_Vamps = random.randint(7,10)
 for i in range(number_of_Vamps):
     Vamps.append(CreateVampire())
     VampsANDWerewolfs.extend(Vamps)
@@ -1814,7 +1991,7 @@ for i in range(number_of_Vamps):
 
 
 
-number_of_Wers = random.randint(5,10)
+number_of_Wers = random.randint(7,10)
 for i in range(number_of_Wers):
     Werewolfs.append(CreateWerewolf())
     VampsANDWerewolfs.extend(Werewolfs)
@@ -1861,6 +2038,7 @@ def ShootingBullets(Bullets_x, Bullets_y, avatar, key):
         facing_y = -1
         facing_x = 0
     if key[pg.K_SPACE]:
+        shootingSound.play()
         if len(Bullets_x) < 60:
             if avatar.right:
                 newBullet_x = round(avatar.x + avatar.width)
@@ -1906,13 +2084,14 @@ def BeingShoot(enemy, Bullets):
 ###############################################################################
 
 def run_game(starting_scene):
-    pg.init()
+    
     crashed = False
     main()
+
     active_scene = starting_scene
     while not crashed:
-        key=pg.key.get_pressed()
- 
+#        key=pg.key.get_pressed()
+        
         active_scene.Update()
         active_scene.Render(gameDisplay)
         active_scene.quitScene()
@@ -1923,6 +2102,8 @@ def run_game(starting_scene):
             crashed = True
      
         clock.tick(active_scene.flps)
-    pg.quit()
-run_game(GameScene(player))
+   
+run_game(Introduction(player))
+
+pg.quit()
 quit()
