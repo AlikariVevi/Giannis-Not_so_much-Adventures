@@ -103,7 +103,9 @@ Black_Coat_100 = pg.transform.scale(Black_Coat,(100,100))
 
 Werewolf_Wig_100 = pg.transform.scale(Werewolf_Wig,(100,100))
 
+Black_Coat_30 = pg.transform.scale(Black_Coat,(30,30))
 
+Fancy_Shocks_200 = pg.transform.scale(Fancy_Shocks,(200,200))
 ###############################################################################
 ###################           Avatar Images         ###########################
 ###############################################################################
@@ -112,6 +114,13 @@ Werewolf_Wig_100 = pg.transform.scale(Werewolf_Wig,(100,100))
 ###################              Player             ###########################
 ###############################################################################
 image_path="Giannis"
+
+Giannis_in_Jail = pg.image.load("Giannis\GiannisFrond\Giannis_in_Jail.png")
+########################################################################
+#############                   Resizing             ###################
+########################################################################
+
+Giannis_in_Jail_400 = pg.transform.scale(Giannis_in_Jail,(400,400))
 
 ##Walking
 
@@ -286,6 +295,82 @@ BackHead_Beaten=[pg.image.load(i) for i in Back_images_Beaten_path]
 ########################################################################
 
 Bigger_BackHead_Beaten_400 = [pg.transform.scale(im,(400,400)) for im in BackHead_Beaten]
+
+#############################################################
+############## BEATEN with new Shocks  ######################
+#############################################################
+Right_images_Beaten_NewShocks=["sprite_GiannisWalking_Beaten_NewShocks10",
+                     "sprite_GiannisWalking_Beaten_NewShocks11",
+                     "sprite_GiannisWalking_Beaten_NewShocks12",
+                     "sprite_GiannisWalking_Beaten_NewShocks13",
+                     "sprite_GiannisWalking_Beaten_NewShocks14",
+                     "sprite_GiannisWalking_Beaten_NewShocks15",
+                     "sprite_GiannisWalking_Beaten_NewShocks16",
+                     "sprite_GiannisWalking_Beaten_NewShocks17",
+                     "sprite_GiannisWalking_Beaten_NewShocks18",
+                     "sprite_GiannisWalking_Beaten_NewShocks19",
+                     "sprite_GiannisWalking_Beaten_NewShocks20",
+                     "sprite_GiannisWalking_Beaten_NewShocks21",
+                     "sprite_GiannisWalking_Beaten_NewShocks22",
+                     "sprite_GiannisWalking_Beaten_NewShocks23",
+                     "sprite_GiannisWalking_Beaten_NewShocks24",
+                     "sprite_GiannisWalking_Beaten_NewShocks25",
+                     "sprite_GiannisWalking_Beaten_NewShocks26",
+                     "sprite_GiannisWalking_Beaten_NewShocks27",
+                     "sprite_GiannisWalking_Beaten_NewShocks28",
+                     "sprite_GiannisWalking_Beaten_NewShocks29",
+                     "sprite_GiannisWalking_Beaten_NewShocks30",
+                     "sprite_GiannisWalking_Beaten_NewShocks00",
+                     "sprite_GiannisWalking_Beaten_NewShocks01",
+                     "sprite_GiannisWalking_Beaten_NewShocks02",
+                     "sprite_GiannisWalking_Beaten_NewShocks03",
+                     "sprite_GiannisWalking_Beaten_NewShocks04",
+                     "sprite_GiannisWalking_Beaten_NewShocks05",
+                     "sprite_GiannisWalking_Beaten_NewShocks06",
+                     "sprite_GiannisWalking_Beaten_NewShocks07",
+                     "sprite_GiannisWalking_Beaten_NewShocks08",
+                     "sprite_GiannisWalking_Beaten_NewShocks09"]
+
+
+
+    
+Walking_images_Beaten_NewShocks_path=os.path.join(image_path,"GiannisWalking_Beaten_NewShocks")
+Right_images_Beaten_NewShocks_path=[os.path.join(Walking_images_Beaten_NewShocks_path,i+".png") for i in Right_images_Beaten_NewShocks]
+
+Walking_Right_Beaten_NewShocks=[pg.image.load(i) for i in Right_images_Beaten_NewShocks_path]
+Walking_Left_Beaten_NewShocks=[pg.transform.flip(i,True,False) for i in Walking_Right_Beaten_NewShocks]
+
+########################################################################
+#############                   Resizing             ###################
+########################################################################
+
+Bigger_Walking_Right_Beaten_NewShocks_400 = [pg.transform.scale(im,(400,400)) for im in Walking_Right_Beaten_NewShocks]
+Bigger_Walking_Left_Beaten_NewShocks_400 = [pg.transform.scale(im,(400,400)) for im in Walking_Left_Beaten_NewShocks]
+
+## Avatar Frond
+Frond_images_Beaten_NewShocks=["GiannisStanding_Beaten_NewShocks"]
+Frond_images_folder_Beaten_NewShocks_path=os.path.join(image_path,"GiannisFrond")
+Frond_images_Beaten_NewShocks_path=[os.path.join(Frond_images_folder_Beaten_NewShocks_path,i+".png") for i in Frond_images_Beaten_NewShocks]
+Face_Beaten_NewShocks=[pg.image.load(i) for i in Frond_images_Beaten_NewShocks_path]
+
+########################################################################
+#############                   Resizing             ###################
+########################################################################
+
+Bigger_Frond_Beaten_400 = [pg.transform.scale(im,(400,400)) for im in Face_Beaten]
+
+## Avatar Back
+Back_images_Beaten_NewShocks=["GiannisBack_Beaten_NewShocks"]
+Back_images_folder_Beaten_NewShocks_path=os.path.join(image_path,"GiannisBack")
+Back_images_Beaten_NewShocks_path=[os.path.join(Back_images_folder_Beaten_NewShocks_path,i+".png") for i in Back_images_Beaten_NewShocks]
+BackHead_Beaten_NewShocks=[pg.image.load(i) for i in Back_images_Beaten_NewShocks_path]
+
+########################################################################
+#############                   Resizing             ###################
+########################################################################
+
+Bigger_BackHead_Beaten_400 = [pg.transform.scale(im,(400,400)) for im in BackHead_Beaten]
+
 
 ############## Dressed as a Vampire ######################
 Right_images_Vamp_Giannis=[
@@ -636,23 +721,32 @@ class SceneBase:
     def Terminate(self):
         self.SwitchToScene(None)
 
-                    
+###############################################################################
+###############################################################################
+###############################################################################
+###########################                           #########################
+###########################       Opening Scenes      #########################
+###########################                           #########################
+###############################################################################
+###############################################################################
+###############################################################################                  
         
 class Introduction(SceneBase):
     def __init__(self, player,flps = 10):
         SceneBase.__init__(self, player,flps)
         self.music_playing = True
-        
-        
-        
-    
+
     def quitScene(self):
 
         if self.playButton.pushed:
-            self.SwitchToScene(GameScene(self.player))
+            self.new_player = Player(70,70,32,32)
+            run_game(GameScene(self.new_player))
 
         if self.introButton.pushed:
             self.SwitchToScene(TitleScene(self.player))
+            
+        if self.Resume_Button.pushed:
+            self.SwitchToScene(GameScene(self.player))
             
         if self.controlsButton.pushed:
             self.SwitchToScene(Control_Keys(self.player))
@@ -667,6 +761,9 @@ class Introduction(SceneBase):
             
         if self.Quit_Button.pushed:
             self.crashed = True
+            
+        if self.My_Stuff_Button.pushed:
+            self.SwitchToScene(Giannis_Stuff(self.player))
    
     def Render(self, screen):
         
@@ -678,17 +775,21 @@ class Introduction(SceneBase):
         self.text1 = self.welcomefont.render("Wellcome...", True,black)
         self.screen.blit(self.text1,(50,10))
         
-        self.playButton = Button("Play...", 450, 180, black)
+        self.playButton = Button("New Game...", 450, 180, black)
+        self.Resume_Button = Button("Resume Game...", 150, 300, black)
         self.introButton = Button("Introduction...", 450, 240,black)
         self.Sound_Button = Button("Sound", 450, 300, black)
         self.controlsButton = Button("Control Keys...", 450, 360, black)
         self.Quit_Button = Button("Quit", 450, 420, black)
+        self.My_Stuff_Button = Button("Personal Storage (aka Giannis Stuff)", 550, 500, black, gold)
         
         self.playButton.DrawButton(self.screen)
         self.introButton.DrawButton(self.screen)
         self.Sound_Button.DrawButton(self.screen)
         self.controlsButton.DrawButton(self.screen)
         self.Quit_Button.DrawButton(self.screen)
+        self.My_Stuff_Button.DrawButton(self.screen)
+        self.Resume_Button.DrawButton(self.screen)
         
         if self.player.ability_to_be_invisible:
             if self.player.invisible:
@@ -705,7 +806,8 @@ class Introduction(SceneBase):
         else:
             self.screen.blit(Bigger_Frond_400[0],(600,100))
 
-        
+###############################################################################
+            
 class Control_Keys(SceneBase):
     def __init__(self,player, flps = 10):
         SceneBase.__init__(self,player, flps)
@@ -741,8 +843,132 @@ class Control_Keys(SceneBase):
         self.texts = ((self.text1,(250,140)),(self.text2,(250,180)),(self.text3,(250,220)),
                       (self.text4,(250,260)),(self.text5,(250,300)),(self.text6,(250,340)))
         self.screen.blits(self.texts)
+###############################################################################
 
+class Giannis_Stuff(SceneBase):
+    def __init__(self, player,flps = 10):
+        SceneBase.__init__(self, player,flps)
+        
+    def quitScene(self):
 
+        if self.Go_Button.pushed:
+            self.SwitchToScene(GameScene(self.player))
+
+        if self.Back_Button.pushed:
+            self.SwitchToScene(Introduction(self.player))
+   
+    def Render(self, screen):
+        
+        self.screen = screen
+        self.screen.fill(HelloScreenColor)
+        
+        
+        self.welcomefont = pg.font.SysFont("comicsansms", 60)
+        self.text1 = self.welcomefont.render("Personal Storage Unit", True,black)
+        self.screen.blit(self.text1,(50,10))
+        
+        self.Go_Button = Button("Go", 900, 500)
+        self.Back_Button = Button("Back", 50, 500)
+    
+        self.Go_Button.DrawButton(self.screen)
+        self.Back_Button.DrawButton(self.screen)
+        
+        self.message = "You Have " + str(self.player.coins) + " coins"
+        self.message_x = screen_width - 15*(len(self.message))
+        self.message_y = 60
+        TextMessage(self.screen,self.message,self.message_x, self.message_y, gold, HelloScreenColor)
+      
+        self.box = pg.Rect(600,100,400,400)
+        pg.draw.rect(self.screen, HelloScreenColor, self.box)
+        self.screen.blit(Bigger_Frond_400[0],(600,100))
+        
+        
+        if self.player.ability_to_be_invisible:
+            if self.player.invisible:
+                self.Invisible_Button = Button("Invisibility Cloak On/Off", 300, 180, pink, gold)
+                self.Invisible_Button.DrawButton(self.screen)
+                pg.draw.rect(self.screen, HelloScreenColor, self.box)
+                if self.Invisible_Button.pushed:
+                    self.player.invisible = False
+                self.player.VampireLook_on = False
+                self.player.WerewolfLook_on = False
+            else:
+                self.Invisible_Button = Button("Invisibility Cloak On/Off", 300, 180, black, gold)
+                self.Invisible_Button.DrawButton(self.screen)
+                self.screen.blit(Bigger_Frond_400[0],(600,100))
+                if self.Invisible_Button.pushed:
+                    self.player.invisible = True
+        
+        
+        if self.player.VampireLook and not self.player.injured:
+            self.screen.blit(Black_Coat_30,(253,245))
+            if self.player.VampireLook_on:
+                self.Black_Coat_Button = Button("Vampire Look On/Off", 300, 240, pink, gold)
+                self.Black_Coat_Button.DrawButton(self.screen)
+                self.screen.blit(Bigger_Frond_Vamp_Giannis_400[0],(600,100))
+                if self.Black_Coat_Button.pushed:
+                    self.player.VampireLook_on= False
+                self.player.WerewolfLook_on = False
+                self.player.invisible = False
+            else:
+                self.Black_Coat_Button = Button("Vampire Look On/Off", 300, 240, black, gold)
+                self.Black_Coat_Button.DrawButton(self.screen)
+    #               self.screen.blit(Bigger_Frond_400[0],(600,100))
+                if self.Black_Coat_Button.pushed:
+                    self.player.VampireLook_on = True
+                         
+        if self.player.WerewolfLook and not self.player.injured:
+            self.screen.blit(Werewolf_Wig_100,(220,275))
+            if self.player.WerewolfLook_on:
+                self.Wig_Button = Button("Werewolf Look On/Off", 300, 300, pink, gold)
+                self.Wig_Button.DrawButton(self.screen)
+                self.screen.blit(Bigger_Frond_Wery_Giannis_400[0],(600,100))
+                if self.Wig_Button.pushed:
+                    self.player.WerewolfLook_on = False
+                self.player.invisible = False
+                self.player.VampireLook_on = False
+            else:
+                self.Wig_Button = Button("Werewolf Look On/Off", 300, 300, black, gold)
+                self.Wig_Button.DrawButton(self.screen)
+    #               self.screen.blit(Bigger_Frond_400[0],(600,100))
+                if self.Wig_Button.pushed:
+                    self.player.WerewolfLook_on = True
+        
+        if self.player.injured:
+            self.text4 = font.render("You are injured", True, red)
+            self.screen.blit(self.text4,(300,420))
+            self.text5 = font.render("Go Home", True, red)
+            self.screen.blit(self.text5,(300,480))
+            self.text6 = font.render("Vampire Look On/Off", True, black)
+            self.screen.blit(self.text6,(300,240))
+            self.text7 = font.render("Werewolf Look On/Off", True, black)
+            self.screen.blit(self.text7,(300,300))
+                     
+                     
+        if self.player.number_of_shocks > 0:
+            self.screen.blit(Fancy_Shocks,(250,360))
+            self.text3 = font.render("You have " + str(self.player.number_of_shocks)+" fancy shocks", True,black)
+            self.screen.blit(self.text3,(300,360))
+                     
+        if not self.player.WerewolfLook:
+            if not self.player.VampireLook:
+                if not self.player.ability_to_be_invisible:
+                    if self.player.number_of_shocks == 0:
+#                        self.screen.blit(Bigger_Frond_400[0],(600,100))
+                        self.text3 = font.render("You have has nothing... yet", True,black)
+                        self.screen.blit(self.text3,(250,250))
+
+       
+        
+###############################################################################
+###############################################################################
+###############################################################################
+###########################                           #########################
+###########################    Story- intro Scenes    #########################
+###########################                           #########################
+###############################################################################
+###############################################################################
+###############################################################################
         
 class TitleScene(SceneBase):
     def __init__(self, player,flps = 10):
@@ -965,7 +1191,8 @@ class BeatenScene1(SceneBase):
         # For the sake of brevity, the title scene is a blank red screen
         self.screen = screen
         self.screen.fill(LoseScreenColor)
-        if player.beaten_by_Vampire:
+        
+        if self.player.beaten_by_Vampire:
             self.text1 = font.render("This Vampire beat you up", True,black)
             if player.coins > 0 :
                 self.text2 = font.render("and stole all of your money", True,black)
@@ -980,14 +1207,42 @@ class BeatenScene1(SceneBase):
             self.screen.blit(Bigger_Falling_Down_Left_400[8],(600,100))
             
             
-        if player.beaten_by_Werewolf:
+        if self.player.beaten_by_Werewolf:
             self.text5 = font.render("This Werewolf beat you up", True,black)
             self.text6 = font.render("just for fun. He didn't care for your money", True,black)
             self.texts = (self.text5,(320 , 240)),(self.text6,(320 , 280))
             self.screen.blits(self.texts)
             self.screen.blit(Bigger_Falling_Down_Left_400[8],(600,100))
             
+class BeatenScene2(SceneBase):
+    def __init__(self,player, flps = 10):
+        SceneBase.__init__(self,player, flps)
+    
+    def quitScene(self):
+        self.event=pg.key.get_pressed()
+        if self.event[pg.K_RETURN]:
+            self.SwitchToScene(GameScene(self.player))
+            pg.time.delay(800)
+
+    def Render(self, screen):
+        # For the sake of brevity, the title scene is a blank red screen
+        self.screen = screen
+        self.screen.fill(LoseScreenColor)
+        
+        if player.beaten_by_Vampire:
+            self.text1 = font.render("This Vampire beat a little bit", True,black)
+            self.text2 = font.render("and stole all of your money", True,black)
+            self.texts = (self.text1,(300 , 240)),(self.text2,(300 , 280))
+            self.screen.blits(self.texts)
+            self.screen.blit(Bigger_Frond_Wery_Giannis_400[0],(600,100))
             
+            
+        if player.beaten_by_Werewolf:
+            self.text5 = font.render("This Werewolf beat you a little bit", True,black)
+            self.text6 = font.render("He didn't care for your money", True,black)
+            self.texts = (self.text5,(320 , 240)),(self.text6,(320 , 280))
+            self.screen.blits(self.texts)
+            self.screen.blit(Bigger_Frond_Vamp_Giannis_400[0],(600,100))          
             
 
 ###############################################################################
@@ -1022,7 +1277,7 @@ class LookAround(SceneBase):
         
         
         self.screen.blit(Bigger_Frond_200[0],(0,300))
-        self.message = "You Have " + str(player.coins) + " coins"
+        self.message = "You Have " + str(self.player.coins) + " coins"
         self.message_x = screen_width/2 - 5*(len(self.message))
         self.message_y = 515
         TextMessage(self.screen,self.message,self.message_x, self.message_y, black, HelloScreenColor)
@@ -1090,7 +1345,7 @@ class LookAround_Buying_BlackCoat(SceneBase):
         
         
         self.screen.blit(Bigger_Frond_200[0],(0,300))
-        self.message = "You Have " + str(player.coins) + " coins"
+        self.message = "You Have " + str(self.player.coins) + " coins"
         self.message_x = screen_width/2 - 5*(len(self.message))
         self.message_y = 515
         TextMessage(self.screen,self.message,self.message_x, self.message_y, black, HelloScreenColor)
@@ -1130,7 +1385,7 @@ class LookAround_Buying_BlackCoat(SceneBase):
             else:
                self.SwitchToScene(Do_not_waste_my_time(self.player))
        
-        self.screen.blit(self.text2,(screen_width/2 - 3.7*(len(self.message)),420)) 
+        self.screen.blit(self.text2,(770,220)) 
 
 ##########################################################33
 
@@ -1153,7 +1408,7 @@ class LookAround_Buying_Wig(SceneBase):
         
         
         self.screen.blit(Bigger_Frond_200[0],(0,300))
-        self.message = "You Have " + str(player.coins) + " coins"
+        self.message = "You Have " + str(self.player.coins) + " coins"
         self.message_x = screen_width/2 - 5*(len(self.message))
         self.message_y = 515
         TextMessage(self.screen,self.message,self.message_x, self.message_y, black, HelloScreenColor)
@@ -1193,7 +1448,7 @@ class LookAround_Buying_Wig(SceneBase):
             else:
                self.SwitchToScene(Do_not_waste_my_time(self.player))
        
-        self.screen.blit(self.text2,(screen_width/2 - 3.7*(len(self.message)),420)) 
+        self.screen.blit(self.text2,(770,220)) 
 ##########################################################
 class I_am_not_selling_you_more_shocks(SceneBase):
     def __init__(self,player, flps = 10):
@@ -1212,9 +1467,8 @@ class I_am_not_selling_you_more_shocks(SceneBase):
         self.screen = screen
         self.screen.fill(HelloScreenColor)
         
-        
-        self.screen.blit(Bigger_Frond_200[0],(0,300))
-        self.message = "You Have " + str(player.coins) + " coins"
+    
+        self.message = "You Have " + str(self.player.coins) + " coins"
         self.message_x = screen_width/2 - 5*(len(self.message))
         self.message_y = 515
         TextMessage(self.screen,self.message,self.message_x, self.message_y, black, HelloScreenColor)
@@ -1246,8 +1500,10 @@ class I_am_not_selling_you_more_shocks(SceneBase):
         self.Wig_Button.DrawButton(self.screen)
         self.Shocks_Button.DrawButton(self.screen)
 
-        self.text2 = font.render("I am not selling you more shocks", True,black)
-        self.screen.blit(self.text2,(screen_width/2 - 7*(len(self.message)),420))         
+        self.text2 = font.render("I am not selling", True,black)
+        self.screen.blit(self.text2 ,(770,220)) 
+        self.text3 = font.render("you more shocks", True,black)
+        self.screen.blit(self.text3 ,(770,250))        
 
 ##########################################################33
 
@@ -1270,7 +1526,7 @@ class LookAround_Buying_Shocks(SceneBase):
         
         
         self.screen.blit(Bigger_Frond_200[0],(0,300))
-        self.message = "You Have " + str(player.coins) + " coins"
+        self.message = "You Have " + str(self.player.coins) + " coins"
         self.message_x = screen_width/2 - 5*(len(self.message))
         self.message_y = 515
         TextMessage(self.screen,self.message,self.message_x, self.message_y, black, HelloScreenColor)
@@ -1330,7 +1586,7 @@ class Do_not_waste_my_time(SceneBase):
         
         
         self.screen.blit(Bigger_Frond_200[0],(0,300))
-        self.message = "You Have " + str(player.coins) + " coins"
+        self.message = "You Have " + str(self.player.coins) + " coins"
         self.message_x = screen_width/2 - 5*(len(self.message))
         self.message_y = 515
         TextMessage(self.screen,self.message,self.message_x, self.message_y, black, HelloScreenColor)
@@ -1363,7 +1619,7 @@ class Do_not_waste_my_time(SceneBase):
         self.Shocks_Button.DrawButton(self.screen)
 
         self.text2 = font.render("Do not waste my time", True,black)
-        self.screen.blit(self.text2,(screen_width/2 - 5.5*(len(self.message)),420)) 
+        self.screen.blit(self.text2,(770,220)) 
 ##########################################################33
 
 class InvisibilityClothScene_1(SceneBase):
@@ -1372,8 +1628,12 @@ class InvisibilityClothScene_1(SceneBase):
         
     
     def quitScene(self):
+        self.event=pg.key.get_pressed()
+        if self.event[pg.K_RETURN]:
+            self.SwitchToScene(GameScene(self.player))
+            pg.time.delay(800)
+        
         if self.Go_Button.pushed:
-            
             self.SwitchToScene(GameScene(self.player))
             
         if self.Quit_Button.pushed:
@@ -1697,7 +1957,7 @@ class SomethingRallyReallyGood(SceneBase):
         self.text1 = self.welcomefont.render("Self Presentation store", True,black)
         self.screen.blit(self.text1,(165,50))
         
-        self.text3 = font.render("With the proppe", True,black)
+        self.text3 = font.render("With the proper", True,black)
         self.screen.blit(self.text3,(600,150))
         self.text2 = font.render("amount of coins...", True,black)
         self.screen.blit(self.text2,(600,180))
@@ -2065,11 +2325,92 @@ class PauseScene(SceneBase):
         
         self.Play_Button.DrawButton(self.screen)
         self.Quit_Button.DrawButton(self.screen)
-        
+
+######################################################
+
+class Lets_steal_all_the_shocks(SceneBase):
+    def __init__(self,player, flps = 50):
+        SceneBase.__init__(self, player,flps)
+
+    def quitScene(self):
+        if self.Back_Button.pushed:
+           self.SwitchToScene(GameScene(self.player))
          
+        if self.Go_Button.pushed:
+            self.player.steal_shocks = True
+            self.player.number_of_shocks = random.randint(30,50)
+            self.SwitchToScene(GameScene(self.player))
+        
+    
+    def Render(self, screen):
+        
+        self.screen = screen
+        screen.fill(HelloScreenColor)
+        
+        self.Go_Button = Button("Go to get the shocks", 700, 500, gold)
+        self.Back_Button = Button("Back to just shooting", 50, 500, gold)
+    
+        self.Go_Button.DrawButton(self.screen)
+        self.Back_Button.DrawButton(self.screen)
+        
+        self.text1 = font.render("I am bored", True,black)
+        self.text2 = font.render("Let's go steal ", True,black)
+        self.text3 = font.render("some shocks", True,black)
+
+
+        self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),
+                      (self.text3,(100 , 220)))
+        self.screen.blits(self.texts) 
+        
+        
+        self.screen.blit(Bigger_Frond_400[0],(600,100))        
+#####################################################
+
+class Congrats_for_the_shocks(SceneBase):
+    def __init__(self,player, flps = 50):
+        SceneBase.__init__(self, player,flps)
+
+    def quitScene(self):
+        if self.Back_Button.pushed:
+           self.SwitchToScene(End_Game_2(self.player))
+         
+       
+        
+    
+    def Render(self, screen):
+        
+        self.screen = screen
+        screen.fill(HelloScreenColor)
+        
+        self.screen.blit(Bigger_Frond_400[0],(600,100))
+        
+        self.screen.blit(Fancy_Shocks,(310,260))
+        self.screen.blit(Fancy_Shocks,(231,465))
+        self.screen.blit(Fancy_Shocks,(601,165))
+        self.screen.blit(Fancy_Shocks,(901,505))
+        self.screen.blit(Fancy_Shocks,(400,40))
+        self.screen.blit(Fancy_Shocks_100,(250,360))
+        self.screen.blit(Fancy_Shocks_100,(50,50))
+        self.screen.blit(Fancy_Shocks_100,(856,25))
+        self.screen.blit(Fancy_Shocks_200,(500,340))
+        
+        self.text1 = font.render("Congratulations!!!!!!!!!!!", True,black)
+        self.text2 = font.render("on your ability to steal.......", True,black)
+        self.text3 = font.render("You now have", True,black)
+        self.text4 = font.render(str(player.number_of_shocks) + " fancy shocks", True, black)
+
+
+        self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),
+                      (self.text3,(100 , 220)),(self.text4,(120 , 260)))
+        self.screen.blits(self.texts)   
+        
+        
+        self.Back_Button = Button("Back to just shooting", 50, 400, gold)
+    
+        self.Back_Button.DrawButton(self.screen)
 #####################################################3
 
-class CongratsScene(SceneBase):
+class End_Scene_1(SceneBase):
     def __init__(self,player , flps = 10):
         SceneBase.__init__(self, player,flps)
         
@@ -2101,31 +2442,79 @@ class CongratsScene(SceneBase):
         # For the sake of brevity, the title scene is a blank red screen
         self.text1 = font.render("Congratulations!!!!!!!!!!!", True,black)
         self.text2 = font.render("on your ability to steal.......", True,black)
-        self.text3 = font.render("Unfortunatly your total loot is", True,black)
+        self.text3 = font.render("Your total loot is", True,black)
         self.text4 = font.render(str(player.total_stolen_coins) + " coins", True, black)
-        self.text5 = font.render("And that was much more that they can tolerate", True,black)
-        self.text6 = font.render("You end up in the hospital", True,black)
-        self.text7 = font.render("and lost your gun", True,black)
+        self.text5 = font.render("Unfortunately high rate of stealing", True,black)
+        self.text6 = font.render("has initiate investigation", True,black)
+        self.text7 = font.render("You decide to stay low", True,black)
+        self.text8 = font.render("See you next time", True,black)
         
         
         self.texts = ((self.text1,(100 , 140)),(self.text2,(100 , 180)),
-                      (self.text3,(100 , 260)),(self.text4,(120 , 300)),
-                      (self.text5,(100 , 340)),(self.text6,(100 , 380)),
-                      (self.text6,(100 , 420)))
+                      (self.text3,(100 , 220)),(self.text4,(140 , 260)),
+                      (self.text5,(100 , 300)),(self.text6,(100 , 340)),
+                      (self.text7,(100 , 380)),(self.text8,(160 , 420)))
         self.screen.blits(self.texts)
         
-        self.screen.blit(Bigger_Walking_Right_Beaten_400[0],(600,100))
+        self.screen.blit(Bigger_Walking_Right_400[10],(600,100))
+
+###################################################################
+
+class End_Game_2(SceneBase):
+    def __init__(self,player , flps = 10):
+        SceneBase.__init__(self, player,flps)
+        
+    
+    def quitScene(self):
+        if self.Restart_Button.pushed:
+            self.SwitchToScene(Introduction(self.player))
+            
+        if self.Quit_Button.pushed:
+            self.crashed = True
+
+    def Render(self, screen):
+        
+        self.screen = screen
+        screen.fill(HelloScreenColor)
+        
+        self.Restart_Button = Button("New Game", 850, 500, gold)
+        self.Quit_Button = Button("Quit", 50, 500, gold)
+    
+        self.Restart_Button.DrawButton(self.screen)
+        self.Quit_Button.DrawButton(self.screen)
+        
+        self.welcomefont = pg.font.SysFont("comicsansms", 50)
+        self.text1 = self.welcomefont.render("Game Ended", True,black)
+        self.screen.blit(self.text1,(350,20))
+        # For the sake of brevity, the title scene is a blank red screen
+        self.text1 = font.render("Unfortunately", True,black)
+        self.text2 = font.render("the shop keeper reported the thef", True,black)
+        self.text3 = font.render("and informed the police", True,black)
+        self.text4 = font.render("about you purchase of the", True,black)
+        self.text5 = font.render("invisible cloak", True,black)
+        self.text6 = font.render("They came to your house ", True,black)
+        self.text7 = font.render("and found the " + str(player.number_of_shocks) + " fancy shocks", True,black)
+        self.text8 = font.render("and your gun.", True,black)
+        self.text9 = font.render("You are currently in jail.", True,black)
+        self.text10 = font.render("See you next time", True,black)
         
         
+        self.texts = ((self.text1,(100 , 100)),(self.text2,(120 , 140)),
+                      (self.text3,(140 , 180)),(self.text4,(160 , 220)),
+                      (self.text5,(100 , 260)),(self.text6,(120 , 300)),
+                      (self.text7,(140 , 340)),(self.text8,(160 , 380)),
+                      (self.text9,(100 , 420)),(self.text10,(140 , 460)))
+        self.screen.blits(self.texts)
+        
+        self.screen.blit(Giannis_in_Jail_400,(600,100))
+
+                
 ####################################################3##########        
         
 class GameScene(SceneBase):
     def __init__(self,player, flps = 50):
         SceneBase.__init__(self, player,flps)
 
-        
-        
-    
     def quitScene(self):
         if self.Menu_Button.pushed:
            self.SwitchToScene(Introduction(self.player))
@@ -2133,19 +2522,16 @@ class GameScene(SceneBase):
         if self.Pause_Button.pushed:
             self.SwitchToScene(PauseScene(self.player))
         
-    def Update(self):
-        pass
     
     def Render(self, screen):
         self.event=pg.key.get_pressed()
         self.screen = screen
-        
         self.screen.fill(saddlebrown)
         #Vamps and Werewolfs external lists
         redrawGameWindow(self.screen, self.player, Vamps, Werewolfs)
         
-        tailor = Tailor(895,115,32,32)
-        tailor.MeetingPalyer(self.player)
+        self.tailor = Tailor(895,115,32,32)
+        self.tailor.MeetingPalyer(self.player)
         
         
         self.Pause_Button = Button("Pause", 900, 500, gold)
@@ -2158,7 +2544,7 @@ class GameScene(SceneBase):
         self.player.beaten_by_Vampire = False
        
         
-        self.message = "You Have " + str(player.coins) + " coins"
+        self.message = "You Have " + str(self.player.coins) + " coins"
         self.message_x = screen_width - 14*(len(self.message))
         self.message_y = 40
         TextMessage(self.screen,self.message,self.message_x, self.message_y, gold, saddlebrown)
@@ -2177,17 +2563,31 @@ class GameScene(SceneBase):
         if self.player.Beaten:
             self.player.Beaten = False
             self.player.Get_Up(1000)
-            self.SwitchToScene(BeatenScene1(self.player))
-       
-        if self.player.total_stolen_coins > 7000:
-            self.SwitchToScene(CongratsScene(self.player))
+            if not self.player.WerewolfLook_on and not self.player.VampireLook_on:
+                self.SwitchToScene(BeatenScene1(self.player))
+            else:
+                self.SwitchToScene(BeatenScene2(self.player))
+                
+        if self.player.total_stolen_coins > 8000:
+            self.SwitchToScene(End_Scene_1(self.player))
             
-        if tailor.talking:
-            tailor.talking = False
-            self.SwitchToScene(InvisibilityClothScene_1(self.player))
+        if self.tailor.talking:
+            self.tailor.talking = False
+            if self.player.steal_shocks:
+                if player.invisible:
+                    self.SwitchToScene(Congrats_for_the_shocks(self.player))
+            else:
+                self.SwitchToScene(InvisibilityClothScene_1(self.player))
+                
+        if self.player.ability_to_be_invisible:
+            if self.player.coins > 4000:
+                if self.player.number_of_shocks == 5:
+                    self.SwitchToScene(Lets_steal_all_the_shocks(self.player))
             
         pg.display.update()   
 
+     
+        
 ###############################################################################
 ###############################################################################
 #######################            AVATARS           ##########################
@@ -2300,22 +2700,22 @@ class Avatar(object):
         self.message = message
         self.obj = obj
         ## moving left
-        if self.moving_keys[pg.K_RIGHT]:
+        if self.right:
             self.hitbox.left = self.obj.hitbox.right
             self.DoNothing()
             self.x -=6                     
         ## moving right
-        if self.moving_keys[pg.K_LEFT]:
+        if self.left:
             self.hitbox.right = self.obj.hitbox.left
             self.DoNothing()
             self.x +=6
         ## moving up
-        if self.moving_keys[pg.K_UP]:
+        if self.back:
             self.hitbox.top = self.obj.hitbox.bottom
             self.DoNothing()
             self.y+=5
         ## moving up
-        if self.moving_keys[pg.K_DOWN]:
+        if self.frond:
             self.hitbox.bottom = self.obj.hitbox.top
             self.DoNothing()
             self.y-=5
@@ -2340,7 +2740,7 @@ class Player(Avatar):
         self.Beaten = False
         self.beaten_by_Vampire = False
         self.beaten_by_Werewolf = False 
-        self.coins = 4000
+        self.coins = 0
         self.injured = False
         self.total_stolen_coins = 0
         self.inside = []
@@ -2348,7 +2748,10 @@ class Player(Avatar):
         self.invisible = False
         self.VampireLook = False
         self.WerewolfLook = False
+        self.VampireLook_on = False
+        self.WerewolfLook_on = False
         self.number_of_shocks = 0
+        self.steal_shocks = False
        
         
 
@@ -2459,21 +2862,43 @@ class Player(Avatar):
         for enemy in self.enemies:
             if not self.invisible:
                 if  not enemy.unconsious:
-                    if enemy.AttackingBox.colliderect(player.hitboxBody):
+                    if enemy.AttackingBox.colliderect(self.hitboxBody):
                         if not self.dying:
-                            enemy.Attacking(self)
-                            if enemy.Attacking(self):
-                                self.dying = True
-                                self.Person_to_Beat_You = enemy
-                                self.injured = True
-                                enemy.Free_to_move = True
-                                self.Free_to_move = False
-                                if enemy in Vamps:
+                            if not self.VampireLook_on and not self.WerewolfLook_on:
+                                enemy.Attacking(self)
+                                if enemy.Attacking(self):
+                                    self.dying = True
+                                    self.Person_to_Beat_You = enemy
+                                    self.injured = True
+                                    enemy.Free_to_move = True
+                                    self.Free_to_move = False
+                                    if enemy in Vamps:
+                                        enemy.coins += self.coins
+                                        self.coins = 0
+                                        self.beaten_by_Vampire = True
+                                    else:
+                                        self.beaten_by_Werewolf = True
+                                else:
+                                    pass
+                            elif self.VampireLook_on and enemy in Werewolfs:
+                                enemy.Attacking(self)
+                                if enemy.Attacking(self):
+                                    self.dying = True
+                                    self.Person_to_Beat_You = enemy
+                                    enemy.Free_to_move = True
+                                    self.Free_to_move = False
+                                    self.beaten_by_Werewolf = True
+                                    
+                            elif self.WerewolfLook_on and enemy in Vamps:
+                                enemy.Attacking(self)
+                                if enemy.Attacking(self):
+                                    self.dying = True
+                                    self.Person_to_Beat_You = enemy
+                                    enemy.Free_to_move = True
+                                    self.Free_to_move = False
                                     enemy.coins += self.coins
                                     self.coins = 0
                                     self.beaten_by_Vampire = True
-                                else:
-                                    self.beaten_by_Werewolf = True
                             else:
                                 pass
                 else: 
@@ -2496,7 +2921,7 @@ class Player(Avatar):
         ####################################
 
         if self.hitboxBody.collidelist(self.BuildingsSurface) ==-1:
-                self.inside = False
+            self.inside = False
         else:
             self.inside = True
                 
@@ -2505,87 +2930,177 @@ class Player(Avatar):
         self.screen = screen
         Avatar.drawAvatar(self, self.screen)
         #walking image number of frames
-        if self.WalkCount + 1 > 31:
+        if self.WalkCount + 1 > 27:
             self.WalkCount = 0
         if self.DyingCount + 1 > 31:
             self.DyingCount = 0
-            self.injured = True
             self.Beaten = True
         if not self.invisible:
-            if not self.injured:
-                if self.right and not self.dying:
-                    # count time after this action
-                    self.actionTime=timeUnit()
-                    #dispalying action
-                    self.screen.blit(Walking_Right[self.WalkCount],(self.x,self.y))
-                    self.WalkCount+=1
-                elif self.left and not self.dying:
-                    # count time after this action
-                    self.actionTime=timeUnit()
-                    #dispalying action
-                    self.screen.blit(Walking_Left[self.WalkCount],(self.x,self.y))
-                    self.WalkCount+=1
-                elif self.back and not self.dying:
-                    # count time after this action
-                    self.actionTime=timeUnit()
-                    #dispalying action
-                    self.screen.blit(BackHead[0],(self.x,self.y))    
-                elif self.frond and not self.dying:
-                        # count time after this action
-                    self.actionTime=timeUnit()
-                        #dispalying action
-                    self.screen .blit(Face[0],(self.x,self.y))
-                elif self.dying:
-                    self.actionTime=timeUnit()
-                    self.screen.blit(Falling_Down_Left[self.DyingCount],(self.x,self.y))
-                    self.DyingCount += 1
+            if not self.WerewolfLook_on:
+                if not self.VampireLook_on:
+                    if not self.injured:
+                        if self.right and not self.dying:
+                            # count time after this action
+                            self.actionTime=timeUnit()
+                            #dispalying action
+                            self.screen.blit(Walking_Right[self.WalkCount],(self.x,self.y))
+                            self.WalkCount+=1
+                        elif self.left and not self.dying:
+                            # count time after this action
+                            self.actionTime=timeUnit()
+                            #dispalying action
+                            self.screen.blit(Walking_Left[self.WalkCount],(self.x,self.y))
+                            self.WalkCount+=1
+                        elif self.back and not self.dying:
+                            # count time after this action
+                            self.actionTime=timeUnit()
+                            #dispalying action
+                            self.screen.blit(BackHead[0],(self.x,self.y))    
+                        elif self.frond and not self.dying:
+                                # count time after this action
+                            self.actionTime=timeUnit()
+                                #dispalying action
+                            self.screen .blit(Face[0],(self.x,self.y))
+                        elif self.dying:
+                            self.actionTime=timeUnit()
+                            self.screen.blit(Falling_Down_Left[self.DyingCount],(self.x,self.y))
+                            self.DyingCount += 1
+                        else:
+                            self.WaitingSequence(self.screen)
+                    if self.injured:
+                        if self.number_of_shocks == 0:
+                            if self.right and not self.dying:
+                                # count time after this action
+                                self.actionTime=timeUnit()
+                                #dispalying action
+                                self.screen.blit(Walking_Right_Beaten[self.WalkCount],(self.x,self.y))
+                                self.WalkCount+=1
+                            elif self.left and not self.dying:
+                                # count time after this action
+                                self.actionTime=timeUnit()
+                                #dispalying action
+                                self.screen.blit(Walking_Left_Beaten[self.WalkCount],(self.x,self.y))
+                                self.WalkCount+=1
+                            elif self.back and not self.dying:
+                                # count time after this action
+                                self.actionTime=timeUnit()
+                                #dispalying action
+                                self.screen.blit(BackHead_Beaten[0],(self.x,self.y))    
+                            elif (self.frond  or self.stand) and not self.dying:
+                                    # count time after this action
+                                self.actionTime=timeUnit()
+                                    #dispalying action
+                                self.screen.blit(Face_Beaten[0],(self.x,self.y))
+                            elif self.dying:
+                                self.actionTime=timeUnit()
+                                self.screen.blit(Falling_Down_Left[self.DyingCount],(self.x,self.y))
+                                self.DyingCount += 1
+                            else:                                   
+                               self.screen.blit(Face_Beaten[0],(self.x,self.y))
+                        else:
+                            if self.right and not self.dying:
+                                # count time after this action
+                                self.actionTime=timeUnit()
+                                #dispalying action
+                                self.screen.blit(Walking_Right_Beaten_NewShocks[self.WalkCount],(self.x,self.y))
+                                self.WalkCount+=1
+                            elif self.left and not self.dying:
+                                # count time after this action
+                                self.actionTime=timeUnit()
+                                #dispalying action
+                                self.screen.blit(Walking_Left_Beaten_NewShocks[self.WalkCount],(self.x,self.y))
+                                self.WalkCount+=1
+                            elif self.back and not self.dying:
+                                # count time after this action
+                                self.actionTime=timeUnit()
+                                #dispalying action
+                                self.screen.blit(BackHead_Beaten_NewShocks[0],(self.x,self.y))    
+                            elif (self.frond  or self.stand) and not self.dying:
+                                    # count time after this action
+                                self.actionTime=timeUnit()
+                                    #dispalying action
+                                self.screen.blit(Face_Beaten_NewShocks[0],(self.x,self.y))
+                            elif self.dying:
+                                self.actionTime=timeUnit()
+                                self.screen.blit(Falling_Down_Left[self.DyingCount],(self.x,self.y))
+                                self.DyingCount += 1
+                            else:                                   
+                               self.screen.blit(Face_Beaten_NewShocks[0],(self.x,self.y))
+                
                 else:
-                    self.WaitingSequence(self.screen)
-            if self.injured:
+                    if self.right and not self.dying:
+                            # count time after this action
+                        self.actionTime=timeUnit()
+                        #dispalying action
+                        self.screen.blit(Walking_Right_Vamp_Giannis[self.WalkCount],(self.x,self.y))
+                        self.WalkCount+=1
+                    elif self.left and not self.dying:
+                        # count time after this action
+                        self.actionTime=timeUnit()
+                        #dispalying action
+                        self.screen.blit(Walking_Left_Vamp_Giannis[self.WalkCount],(self.x,self.y))
+                        self.WalkCount+=1
+                    elif self.back and not self.dying:
+                        # count time after this action
+                        self.actionTime=timeUnit()
+                        #dispalying action
+                        self.screen.blit(BackHead_Vamp_Giannis[0],(self.x,self.y))    
+                    elif (self.frond  or self.stand) and not self.dying:
+                        # count time after this action
+                        self.actionTime=timeUnit()
+                        #dispalying action
+                        self.screen.blit(Face_Vamp_Giannis[0],(self.x,self.y))
+                    elif self.dying:
+                        self.actionTime=timeUnit()
+                        self.screen.blit(Falling_Left_Vamp_Giannis[self.DyingCount],(self.x,self.y))
+                        self.DyingCount += 1
+                    else:                                   
+                        self.screen.blit(Face_Vamp_Giannis[0],(self.x,self.y))
+            else:
                 if self.right and not self.dying:
                     # count time after this action
                     self.actionTime=timeUnit()
                     #dispalying action
-                    self.screen.blit(Walking_Right_Beaten[self.WalkCount],(self.x,self.y))
+                    self.screen.blit(Walking_Right_Wery_Giannis[self.WalkCount],(self.x,self.y))
                     self.WalkCount+=1
                 elif self.left and not self.dying:
                     # count time after this action
                     self.actionTime=timeUnit()
                     #dispalying action
-                    self.screen.blit(Walking_Left_Beaten[self.WalkCount],(self.x,self.y))
+                    self.screen.blit(Walking_Left_Wery_Giannis[self.WalkCount],(self.x,self.y))
                     self.WalkCount+=1
                 elif self.back and not self.dying:
                     # count time after this action
                     self.actionTime=timeUnit()
                     #dispalying action
-                    self.screen.blit(BackHead_Beaten[0],(self.x,self.y))    
+                    self.screen.blit(BackHead_Wery_Giannis[0],(self.x,self.y))    
                 elif (self.frond  or self.stand) and not self.dying:
-                        # count time after this action
+                    # count time after this action
                     self.actionTime=timeUnit()
-                        #dispalying action
-                    self.screen.blit(Face_Beaten[0],(self.x,self.y))
+                    #dispalying action
+                    self.screen.blit(Face_Wery_Giannis[0],(self.x,self.y))
                 elif self.dying:
                     self.actionTime=timeUnit()
-                    self.screen.blit(Falling_Down_Left[self.DyingCount],(self.x,self.y))
+                    self.screen.blit(Falling_Left_Wery_Giannis[self.DyingCount],(self.x,self.y))
                     self.DyingCount += 1
                 else:                                   
-                   self.screen.blit(Face_Beaten[0],(self.x,self.y))
-                
-           
-                 
-        #Avatar's boundaries
-#        self.hitbox=(self.x+4, self.y, 20, 32)
-#        pg.draw.rect(gameDisplay,black, self.hitbox,2)
+                    self.screen.blit(Face_Wery_Giannis[0],(self.x,self.y))
                 
     def TextMessage(self,screen, message, x, y,color = gold):
         self.screen = screen
         self.message = message
         self.color = color
         if not self.invisible:
-            if self.injured:
-                self.screen.blit(Face_Beaten[0],(self.x,self.y))
+            if not self.WerewolfLook_on:
+                if not self.VampireLook_on:
+                    if self.injured:
+                        self.screen.blit(Face_Beaten[0],(self.x,self.y))
+                    else:
+                        self.screen.blit(Face[0],(self.x,self.y))
+                else:
+                    self.screen.blit(Face_Vamp_Giannis[0],(self.x,self.y))
             else:
-                self.screen.blit(Face[0],(self.x,self.y))
+                self.screen.blit(Face_Wery_Giannis[0],(self.x,self.y))
         self.text = font.render(self.message, True, self.color)
         self.box=pg.Rect(self.x, self.y-self.text.get_height(),self.text.get_width(),self.text.get_height())
 #        pg.draw.rect(self.screen, white, self.box)
@@ -2867,7 +3382,7 @@ class Mechants(Avatar):
 
     def MeetingPalyer(self,player):
         self.player = player
-        if self.hitboxBody.colliderect(player.hitbox):
+        if self.hitboxBody.colliderect(self.player.hitbox):
             self.talking = True         
             self.player.Collision(self)
                 
@@ -3195,23 +3710,7 @@ def main():
     
     tilemap=[[earth for y in range(mapheight)] for x in range(mapwidth)]
     
-    number_of_Vamps = random.randint(7,15)
-    for i in range(number_of_Vamps):
-        Vamp = CreateVampire()
-        if not Vamp.inside:
-            Vamps.append(Vamp)
-            VampsANDWerewolfs.extend(Vamps)
-    
-    
-    
-    
-    number_of_Wers = random.randint(7,15)
-    for i in range(number_of_Wers):
-        Wery = CreateWerewolf()
-        if not Wery.inside:
-            Werewolfs.append(Wery)
-            VampsANDWerewolfs.extend(Werewolfs)
-        
+
 
         
     
@@ -3356,7 +3855,6 @@ def Action_Inside_Building(player):
 def TextMessage(screen,message, x, y,color = black, colorBox = white):
     text = font.render(message, True, color)
     pg.Rect(x-10,y-text.get_height(),text.get_width()+24,text.get_height())
-    pg.Rect(x-10,y-text.get_height(),text.get_width()+24,text.get_height())
 #    box=pg.Rect(x-10,y-text.get_height(),text.get_width()+24,text.get_height())
 #    pg.draw.rect(screen, colorBox, box)    
     screen.blit(text,(x,y-text.get_height()))
@@ -3372,7 +3870,10 @@ def CreateVampire():
     y2 = random.randint(-32,582)+y1
     if abs(x1-x2)>200 and abs(y1-y2)>200:
         Vamp = Vampire (x1,y1,32,32,x2,y2,BuildingsSurface)
-        return Vamp
+        if Vamp.hitboxBody.collidelist(BuildingsSurface) ==-1:
+            return Vamp  
+        else:
+            return CreateVampire()
     else:
         return CreateVampire()
 
@@ -3387,7 +3888,10 @@ def CreateWerewolf():
     y2 = random.randint(-32,582)+y1
     if abs(x1-x2)>200 and abs(y1-y2)>200:
         Werewolf = WereWolf (x1,y1,32,32,x2,y2,BuildingsSurface)
-        return Werewolf  
+        if Werewolf.hitboxBody.collidelist(BuildingsSurface) ==-1:
+            return Werewolf  
+        else:
+            return CreateWerewolf()
     else:
         return CreateWerewolf()
 
@@ -3485,26 +3989,13 @@ def BeingShoot(enemy, Bullets):
             enemy.Hit()
         
 
-
-            
 ###############################################################################
 #######################                                 #######################
 #######################         Games Main Loop         #######################
 #######################                                 #######################
 ###############################################################################
 main()
-
-###############################################################################
-#######################                                 #######################
-#######################             Avatars              #######################
-#######################                                 #######################
-###############################################################################
-player = Player(850,70,32,32)
-
-tailor = Tailor(895,115,32,32)
-
-gallerist = Gallerist(710,460,32,32)
-
+            
 def run_game(starting_scene):
     
     crashed = False
@@ -3526,8 +4017,38 @@ def run_game(starting_scene):
         clock.tick(active_scene.flps)
 #        drawBackground()
         pg.display.update()
-   
-run_game(LookAround(player))
+
+
+###############################################################################
+#######################                                 #######################
+#######################             Avatars              #######################
+#######################                                 #######################
+###############################################################################
+player = Player(60,70,32,32)
+
+number_of_Vamps = random.randint(7,15)
+for i in range(number_of_Vamps):
+    Vamp = CreateVampire()
+    if not Vamp.inside:
+        Vamps.append(Vamp)
+        VampsANDWerewolfs.extend(Vamps)
+    
+    
+    
+    
+number_of_Wers = random.randint(7,15)
+for i in range(number_of_Wers):
+    Wery = CreateWerewolf()
+    if not Wery.inside:
+        Werewolfs.append(Wery)
+        VampsANDWerewolfs.extend(Werewolfs)
+        
+
+tailor = Tailor(895,115,32,32)
+
+gallerist = Gallerist(710,460,32,32)  
+
+run_game(GameScene(player))
 
 pg.quit()
 quit()
