@@ -1041,10 +1041,10 @@ class TitleScene_2(SceneBase):
         self.Back_Button.DrawButton(self.screen)
         
         self.font = pg.font.SysFont("comicsansms", 20)
-        self.text2 = self.font.render("The called those areas the 'Peace and Friendship' zones", True,black)
+        self.text2 = self.font.render("They called those areas the 'Peace and Friendship' zones", True,black)
         self.text3 = self.font.render("Some hundreds years after their establishment", True,black)
         self.text4 = self.font.render("Their local government went a step further and invested to biological", True,black)
-        self.text5 = self.font.render("experiments for creating a mixed-race species.", True,black)
+        self.text5 = self.font.render("experiments for creating a hubrid species.", True,black)
         self.text6 = self.font.render("The optimists said that the goal was the complete union", True,black)
         self.text7 = self.font.render("The others that they were trying to build the perfect soldier to", True,black)
         self.text8 = self.font.render("conquer the rest of the world. Very few know the truth.", True,black)
