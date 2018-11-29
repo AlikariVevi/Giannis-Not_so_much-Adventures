@@ -772,7 +772,7 @@ class Introduction(SceneBase):
         
         
         self.welcomefont = pg.font.SysFont("comicsansms", 100)
-        self.text1 = self.welcomefont.render("Wellcome...", True,black)
+        self.text1 = self.welcomefont.render("Welcome...", True,black)
         self.screen.blit(self.text1,(50,10))
         
         self.playButton = Button("New Game...", 450, 180, black)
@@ -999,9 +999,9 @@ class TitleScene(SceneBase):
         
         self.font = pg.font.SysFont("comicsansms", 20)
         self.text1 = font.render("Hello!!", True,black)
-        self.text2 = self.font.render("This is Giannis. Giannis leaves in a non rotating planet. In a Galaxy far far away...", True,black)
+        self.text2 = self.font.render("This is Giannis. Giannis lives in a non rotating planet. In a Galaxy far far away...", True,black)
         self.text3 = self.font.render("Once inhabited by humans but not anymore.", True,black)
-        self.text4 = self.font.render("On this planet there are now two dominaned speaces...", True,black)
+        self.text4 = self.font.render("On this planet there are now two  dominated species...", True,black)
         self.text5 = self.font.render("Vampires and Werewolfs.", True,black)
         self.text6 = self.font.render("After millennial of war between them they finally reach a peaceful", True,black)
         self.text7 = self.font.render("coexistence. The areas of the planet that are neither day", True,black)
@@ -1199,8 +1199,8 @@ class BeatenScene1(SceneBase):
                 self.texts = (self.text1,(300 , 240)),(self.text2,(300 , 280))
                 self.screen.blits(self.texts)
             else:
-                self.text3 = font.render("And beacause you did not have any monet", True,black)
-                self.text4 = font.render("he beat you again", True,black)
+                self.text3 = font.render("And beacause you had no money", True,black)
+                self.text4 = font.render("he beat you up again", True,black)
                 self.texts = ((self.text1,(300, 240)),(self.text3,(300, 280)),
                               (self.text4,(300 , 320)))
                 self.screen.blits(self.texts)
@@ -1209,7 +1209,7 @@ class BeatenScene1(SceneBase):
             
         if self.player.beaten_by_Werewolf:
             self.text5 = font.render("This Werewolf beat you up", True,black)
-            self.text6 = font.render("just for fun. He didn't care for your money", True,black)
+            self.text6 = font.render("just for fun. He didn't care about your money", True,black)
             self.texts = (self.text5,(320 , 240)),(self.text6,(320 , 280))
             self.screen.blits(self.texts)
             self.screen.blit(Bigger_Falling_Down_Left_400[8],(600,100))
@@ -1230,8 +1230,8 @@ class BeatenScene2(SceneBase):
         self.screen.fill(LoseScreenColor)
         
         if player.beaten_by_Vampire:
-            self.text1 = font.render("This Vampire beat a little bit", True,black)
-            self.text2 = font.render("and stole all of your money", True,black)
+            self.text1 = font.render("This Vampire beat you a little bit", True,black)
+            self.text2 = font.render("and stole your money", True,black)
             self.texts = (self.text1,(300 , 240)),(self.text2,(300 , 280))
             self.screen.blits(self.texts)
             self.screen.blit(Bigger_Frond_Wery_Giannis_400[0],(600,100))
@@ -1239,7 +1239,7 @@ class BeatenScene2(SceneBase):
             
         if player.beaten_by_Werewolf:
             self.text5 = font.render("This Werewolf beat you a little bit", True,black)
-            self.text6 = font.render("He didn't care for your money", True,black)
+            self.text6 = font.render("He didn't care about your money", True,black)
             self.texts = (self.text5,(320 , 240)),(self.text6,(320 , 280))
             self.screen.blits(self.texts)
             self.screen.blit(Bigger_Frond_Vamp_Giannis_400[0],(600,100))          
