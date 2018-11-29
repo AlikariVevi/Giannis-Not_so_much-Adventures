@@ -4004,8 +4004,8 @@ def run_game(starting_scene):
     active_scene = starting_scene
     while not crashed:
 #        key=pg.key.get_pressed()
-        
 
+        
         active_scene.Render(gameDisplay)
         active_scene.quitScene()
         pg.display.flip()
@@ -4048,7 +4048,7 @@ tailor = Tailor(895,115,32,32)
 
 gallerist = Gallerist(710,460,32,32)  
 
-run_game(GameScene(player))
+run_game(Introduction(player))
 
 pg.quit()
 quit()
