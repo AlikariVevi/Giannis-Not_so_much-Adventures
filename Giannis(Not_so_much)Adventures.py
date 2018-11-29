@@ -1003,7 +1003,7 @@ class TitleScene(SceneBase):
         self.text3 = self.font.render("Once inhabited by humans but not anymore.", True,black)
         self.text4 = self.font.render("On this planet there are now two  dominated species...", True,black)
         self.text5 = self.font.render("Vampires and Werewolfs.", True,black)
-        self.text6 = self.font.render("After millennial of war between them they finally reach a peaceful", True,black)
+        self.text6 = self.font.render("After millenias of conflict between them they finally reach a peaceful", True,black)
         self.text7 = self.font.render("coexistence. The areas of the planet that are neither day", True,black)
         self.text8 = self.font.render("nor night are inhabited by both species.", True,black)
         
@@ -1044,7 +1044,7 @@ class TitleScene_2(SceneBase):
         self.text2 = self.font.render("The called those areas the 'Peace and Friendship' zones", True,black)
         self.text3 = self.font.render("Some hundreds years after their establishment", True,black)
         self.text4 = self.font.render("Their local government went a step further and invested to biological", True,black)
-        self.text5 = self.font.render("experiments for creating a mix race species.", True,black)
+        self.text5 = self.font.render("experiments for creating a mixed-race species.", True,black)
         self.text6 = self.font.render("The optimists said that the goal was the complete union", True,black)
         self.text7 = self.font.render("The others that they were trying to build the perfect soldier to", True,black)
         self.text8 = self.font.render("conquer the rest of the world. Very few know the truth.", True,black)
@@ -1081,12 +1081,12 @@ class TitleScene_3(SceneBase):
         self.Back_Button.DrawButton(self.screen)
         
         self.font = pg.font.SysFont("comicsansms", 20)
-        self.text2 = self.font.render("What everybody know is that Giannis is the first successful", True,black)
+        self.text2 = self.font.render("What everybody knows is that Giannis is the first successful", True,black)
         self.text3 = self.font.render("'product' of those experiments.", True,black)
-        self.text4 = self.font.render("His parents seeking for the easy money donate their genetic material.", True,black)
+        self.text4 = self.font.render("His parents seeking for easy money donated their genetic material.", True,black)
         self.text5 = self.font.render("The excitement of the success had the scientist focusing on making more", True,black)
         self.text6 = self.font.render("The official announcement said that the child was faster than both species", True,black)
-        self.text7 = self.font.render("but luck in strength and he could feed both with meat and blood.", True,black)
+        self.text7 = self.font.render("but lacked in strength and he could feed both with meat and blood.", True,black)
         
         
         self.texts = ((self.text2,(80 , 160)),
@@ -1128,7 +1128,7 @@ class TitleScene_4(SceneBase):
         self.text5 = self.font.render("the activists made a fuss about it.", True,black)
         self.text6 = self.font.render("After reaching adulthood he was sent away with a few coins.", True,black)
         self.text7 = self.font.render("he is currently living somewhere in the Peace and Friendship Zone", True,black)
-        self.text8 = font.render("And Generally he is to lazy to work", True,black)
+        self.text8 = font.render("And Generally he is too lazy to work", True,black)
         
         self.texts = ((self.text2,(80 , 160)),
                       (self.text3,(80 , 190)),(self.text4,(80 , 220)),
