@@ -939,10 +939,12 @@ class Giannis_Stuff(SceneBase):
             self.screen.blit(self.text4,(300,420))
             self.text5 = font.render("Go Home", True, red)
             self.screen.blit(self.text5,(300,480))
-            self.text6 = font.render("Vampire Look On/Off", True, black)
-            self.screen.blit(self.text6,(300,240))
-            self.text7 = font.render("Werewolf Look On/Off", True, black)
-            self.screen.blit(self.text7,(300,300))
+            if self.player.VampireLook:
+                self.text6 = font.render("Vampire Look On/Off", True, black)
+                self.screen.blit(self.text6,(300,240))
+            if self.player.WerewolfLook:
+                self.text7 = font.render("Werewolf Look On/Off", True, black)
+                self.screen.blit(self.text7,(300,300))
                      
                      
         if self.player.number_of_shocks > 0:
